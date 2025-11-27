@@ -11,6 +11,11 @@ class EventController{
         $eventModel = new Event();
         $data = $eventModel->getAllEvent();
         $top = $eventModel->getTopEvent();
+
+        $editData = null;
+        if(isset($_GET['edit'])){
+            $editData = $eventModel->getById($_GET['edit']);
+        }
         
         require "app/views/root/indexUser.php";
     }
@@ -48,12 +53,19 @@ class EventController{
             $max_peserta = $_POST['max'];
             $price = $_POST['price'];
             $deskripsi = $_POST['deskripsi'];
+            $id = $_POST['id'];
 
             $model = new Event();
-            $insert = $model->AddEvent($category, $title, $deskripsi, $date, $time_start, $time_end, $location, $max_peserta, $price, $status);
+            $insert = $model->editEvent($category, $title, $deskripsi, $date, $time_start, $time_end, $location, $max_peserta, $price, $status, $id);
 
             header("Location: index.php");
         }
+    }
+
+    public function deleteEvent($id){
+        $model = new Event();
+        $delete = $model->deleteEvent($id);
+        header("Location: index.php");
     }
 
     

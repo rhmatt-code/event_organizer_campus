@@ -224,7 +224,7 @@
                             <span>LIST</span>
                         </button>
                     </div>
-                    <?php if($_SESSION['user']['role'] == 'organizer'): ?>
+                    <?php if(isset($_SESSION['user']['role']) ? $_SESSION['user']['role'] : 'organizer'): ?>
                      <button id="openTambah" type="button" class="text-white font-medium py-2.5 px-4 rounded-lg shadow-lg hover:shadow-xl transition-all bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700">
                         <span class="mr-2">➕</span>
                         Tambah Event
@@ -249,9 +249,11 @@
     </div>
 
 <?php include "components/Login.php"; ?> 
+<?php include "components/EventEdit.php"; ?>
 <?php include "components/EventDialog.html" ?>; 
 <script src="app/views/js/Login.js"></script>
 <script src="app/views/js/EventDetail.js"></script>
 <script src="app/views/js/EventTambah.js"></script>
+<script src="app/views/js/EventEdit.js"></script>
 </body>
 </html>

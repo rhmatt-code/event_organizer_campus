@@ -27,6 +27,18 @@ switch($page){
         $event->addEvent();
     break;
 
+    case "editevent":    
+        
+        $event->editEvent();
+       
+    break;
+
+    case "delete":
+       if(isset($_GET['id'])){         
+         $event->deleteEvent($_GET['id']);
+       }
+    break;
+
     case "logout":
         $auth->logout();
     break;

@@ -16,9 +16,9 @@
                 </div>
 
                 <div class="text-gray-500">
-                    <button id="openEventEdit" title="Edit" class="mr-2 hover:text-blue-600">✏️</button>
-                    <?php include "components/EventEdit.html"; ?>
-                    <button href="#" title="Hapus" class="hover:text-red-600">🗑️</button>
+                    <button id="openEdit" class="openEdit mr-2" data-id="<?= $event['id'] ?>" data-title="<?= $event['title'] ?>" data-status="<?= $event['status'] ?>" data-description="<?= $event['description'] ?>" data-price="<?= $event['price']; ?>"  data-max="<?= $event['max_participants'] ?>" data-location="<?= $event['location'] ?>" data-date="<?= $event['event_date'] ?>" data-start="<?= date("H:i", strtotime($event['event_time'])); ?>" data-end="<?= date("H:i", strtotime($event['event_end_time'])); ?>">✏️</button>
+                    
+                    <a href="index.php?page=delete&id=<?= $event['id'] ?>" title="Hapus" class="hover:text-red-600">🗑️</a>
                 </div>
                 </div>
 
