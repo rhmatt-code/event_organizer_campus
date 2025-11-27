@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rincian Pembayaran</title>
+    <link rel="stylesheet" href="/src/output.css">
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-md">
+        <div class="p-6 border-b border-gray-200">
+            <h2 class="text-lg font-semibold text-gray-900 flex items-center gap-2">
+                <span class="text-amber-600">🏦</span>
+                Rincian Pembayaran
+            </h2>
+        </div>
+
+        <div class="p-6 space-y-6">
+          
+          <div class="bg-gradient-to-r from-red-50 to-orange-50 p-4 rounded-xl border-2 border-red-200">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="text-red-600">⏰</span>
+                <span class="text-gray-700 font-medium">Batas Waktu Pembayaran</span>
+              </div>
+              <span class="text-red-600 font-semibold">00:59:30</span>
+            </div>
+          </div>
+
+          <div class="bg-gradient-to-r from-blue-600 to-blue-700 p-6 rounded-xl text-white">
+            <div class="flex items-center gap-3 mb-4">
+              <div class="bg-white/20 p-3 rounded-lg">
+                <span class="text-3xl">🏦</span>
+              </div>
+              <div>
+                <p class="text-white/80 text-sm">Transfer ke</p>
+                <p class="text-white font-semibold text-lg">Bank MANDIRI</p>
+              </div>
+            </div>
+            
+            <div class="bg-white/10 backdrop-blur-sm p-4 rounded-lg">
+              <p class="text-white/80 mb-2 text-sm">Nomor Virtual Account</p>
+              <div class="flex items-center justify-between gap-2">
+                <p class="text-white font-semibold tracking-wider text-lg">880812345678</p>
+                <button
+                  type="button"
+                  class="text-white hover:bg-white/20 p-2 rounded-md"
+                >
+                  <span class="text-xl">📋</span>
+                  </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-gradient-to-br from-slate-50 to-stone-50 p-6 rounded-xl border-2 border-slate-200 space-y-3">
+            <h4 class="text-gray-900 font-semibold mb-3">Rincian Pembayaran</h4>
+            
+            <div class="flex justify-between items-center text-sm">
+              <span class="text-gray-600">Event</span>
+              <span class="text-gray-900 font-medium">Seminar Teknologi AI</span>
+            </div>
+            
+            <div class="flex justify-between items-center text-sm">
+              <span class="text-gray-600">Harga Tiket</span>
+              <span class="text-gray-900 font-medium">Rp 150.000</span>
+            </div>
+            
+            <div class="flex justify-between items-center text-sm">
+              <span class="text-gray-600">Biaya Admin</span>
+              <span class="text-gray-900 font-medium">Rp 0</span>
+            </div>
+            
+            <div class="border-t-2 border-slate-300 pt-3 mt-3">
+              <div class="flex justify-between items-center">
+                <span class="text-gray-900 font-medium">Total Pembayaran</span>
+                <span class="text-amber-700 font-bold text-lg">Rp 150.000</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
+            <p class="text-blue-900 mb-2 font-semibold flex items-center gap-2">
+              <span>💡</span>
+              Cara Pembayaran:
+            </p>
+            <ol class="text-blue-800 space-y-1 list-decimal list-inside text-sm">
+              <li>Buka aplikasi mobile banking Mandiri</li>
+              <li>Pilih menu Transfer/Pembayaran</li>
+              <li>Masukkan nomor Virtual Account di atas</li>
+              <li>Konfirmasi pembayaran sebesar Rp 150.000</li>
+            </ol>
+          </div>
+
+          <button
+            type="button"
+            class="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 shadow-lg hover:shadow-xl transition-all text-white font-medium py-3 px-4 rounded-lg"
+          >
+            Saya Sudah Bayar
+          </button>
+
+          <p class="text-center text-gray-500 text-sm">
+            Klik tombol di atas setelah menyelesaikan pembayaran
+          </p>
+        </div>
+    </div>
+
+</body>
+</html>

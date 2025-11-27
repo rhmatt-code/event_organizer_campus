@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Populer</title>
+    <link rel="stylesheet" href="/src/output.css">
+    <style>
+        .line-clamp-1 { overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 1; line-clamp: 1; }
+        .line-clamp-2 { overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2;line-clamp: 2; }
+    </style>
+</head>
+<body class="bg-gray-100 p-8">
+
+    <div class="mb-8 max-w-7xl mx-auto">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="bg-gradient-to-r from-amber-600 to-yellow-600 p-3 rounded-xl shadow-lg">
+          <span class="text-white text-2xl">📈</span>
+        </div>
+        <div>
+          <h2 class="text-gray-900 font-semibold text-xl">Event Paling Diminati</h2>
+          <p class="text-gray-600">Event dengan pendaftar terbanyak</p>
+        </div>
+      </div>
+
+      <div id="popular-events-container" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        
+        <div class="relative overflow-hidden bg-gradient-to-br from-amber-50 to-yellow-50 border-2 rounded-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
+          <div class="absolute top-0 right-0 w-32 h-32 opacity-20">
+            <div class="absolute inset-0 bg-gradient-to-br from-amber-600 to-yellow-600 rounded-full blur-3xl"></div>
+          </div>
+          <div class="relative p-6">
+            <div class="flex items-start justify-between mb-4">
+              <div class="bg-gradient-to-r from-amber-600 to-yellow-600 text-white px-4 py-2 rounded-xl flex items-center gap-2 shadow-lg">
+                <span>⭐</span> <span class="font-medium">#1</span>
+              </div>
+              <div class="flex items-center gap-2 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-xl border border-slate-200 shadow-md">
+                <span>👥</span> <span class="text-gray-900 font-medium">150 terdaftar</span>
+              </div>
+            </div>
+            <h3 class="text-gray-900 font-semibold text-lg mb-2 line-clamp-1">Seminar Teknologi AI</h3>
+            <p class="text-gray-600 mb-4 line-clamp-2 text-sm">Seminar membahas penerapan Artificial Intelligence di dunia industri modern.</p>
+            <div class="flex items-center gap-2 flex-wrap text-sm">
+              <span class="px-3 py-1 bg-white/90 backdrop-blur-sm rounded-lg text-gray-700 border border-slate-200">Seminar</span>
+              <span class="px-3 py-1 bg-white/90 backdrop-blur-sm rounded-lg text-gray-700 border border-slate-200">10 Des 2025</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="relative overflow-hidden bg-gradient-to-br from-indigo-50 to-purple-50 border-2 rounded-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
+          <div class="absolute top-0 right-0 w-32 h-32 opacity-20">
+            <div class="absolute inset-0 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-full blur-3xl"></div>
+          </div>
+          <div class="relative p-6">
+            <div class="flex items-start justify-between mb-4">
+              <div class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-4 py-2 rounded-xl flex items-center gap-2 shadow-lg">
+                <span>⭐</span> <span class="font-medium">#2</span>
+              </div>
+              <div class="flex items-center gap-2 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-xl border border-slate-200 shadow-md">
+                <span>👥</span> <span class="text-gray-900 font-medium">120 terdaftar</span>
+              </div>
+            </div>
+            <h3 class="text-gray-900 font-semibold text-lg mb-2 line-clamp-1">Workshop UI/UX Design</h3>
+            <p class="text-gray-600 mb-4 line-clamp-2 text-sm">Belajar membuat desain antarmuka yang menarik dan fungsional.</p>
+            <div class="flex items-center gap-2 flex-wrap text-sm">
+              <span class="px-3 py-1 bg-white/90 backdrop-blur-sm rounded-lg text-gray-700 border border-slate-200">Workshop</span>
+              <span class="px-3 py-1 bg-white/90 backdrop-blur-sm rounded-lg text-gray-700 border border-slate-200">15 Nov 2025</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="relative overflow-hidden bg-gradient-to-br from-emerald-50 to-teal-50 border-2 rounded-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
+          <div class="absolute top-0 right-0 w-32 h-32 opacity-20">
+            <div class="absolute inset-0 bg-gradient-to-br from-emerald-600 to-teal-600 rounded-full blur-3xl"></div>
+          </div>
+          <div class="relative p-6">
+            <div class="flex items-start justify-between mb-4">
+              <div class="bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-4 py-2 rounded-xl flex items-center gap-2 shadow-lg">
+                <span>⭐</span> <span class="font-medium">#3</span>
+              </div>
+              <div class="flex items-center gap-2 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-xl border border-slate-200 shadow-md">
+                <span>👥</span> <span class="text-gray-900 font-medium">95 terdaftar</span>
+              </div>
+            </div>
+            <h3 class="text-gray-900 font-semibold text-lg mb-2 line-clamp-1">Webinar Digital Marketing</h3>
+            <p class="text-gray-600 mb-4 line-clamp-2 text-sm">Strategi pemasaran digital terbaru untuk bisnis Anda.</p>
+            <div class="flex items-center gap-2 flex-wrap text-sm">
+              <span class="px-3 py-1 bg-white/90 backdrop-blur-sm rounded-lg text-gray-700 border border-slate-200">Webinar</span>
+              <span class="px-3 py-1 bg-white/90 backdrop-blur-sm rounded-lg text-gray-700 border border-slate-200">20 Des 2025</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <template id="event-card-template">
+      <div class="relative overflow-hidden bg-gradient-to-br border-2 rounded-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1" data-js="card-wrapper">
+          <div class="absolute top-0 right-0 w-32 h-32 opacity-20">
+              <div class="absolute inset-0 bg-gradient-to-br rounded-full blur-3xl" data-js="blur-bg"></div>
+          </div>
+          <div class="relative p-6">
+              <div class="flex items-start justify-between mb-4">
+                  <div class="bg-gradient-to-r text-white px-4 py-2 rounded-xl flex items-center gap-2 shadow-lg" data-js="rank-bg">
+                      <span>⭐</span>
+                      <span class="font-medium" data-js="rank-number">#1</span>
+                  </div>
+                  <div class="flex items-center gap-2 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-xl border border-slate-200 shadow-md">
+                      <span>👥</span>
+                      <span class="text-gray-900 font-medium" data-js="registered-count">0 terdaftar</span>
+                  </div>
+              </div>
+              <h3 class="text-gray-900 font-semibold text-lg mb-2 line-clamp-1" data-js="title">Judul Event</h3>
+              <p class="text-gray-600 mb-4 line-clamp-2 text-sm" data-js="description">Deskripsi event...</p>
+              <div class="flex items-center gap-2 flex-wrap text-sm">
+                  <span class="px-3 py-1 bg-white/90 backdrop-blur-sm rounded-lg text-gray-700 border border-slate-200" data-js="category">Kategori</span>
+                  <span class="px-3 py-1 bg-white/90 backdrop-blur-sm rounded-lg text-gray-700 border border-slate-200" data-js="date">Tanggal</span>
+              </div>
+          </div>
+      </div>
+    </template>
+    </body>
+</html>
