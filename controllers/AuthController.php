@@ -1,6 +1,7 @@
 <?php 
 
 require_once "models/Auth.php";
+require "config/GoogleClient.php";
 
 class AuthController{
     
@@ -13,44 +14,31 @@ class AuthController{
             $userModel = new Auth();
             $user = $userModel->login($email, $password);
 
-             if ($user && password_verify($_POST['password'], $user['password'])) {
-                // set session user
-                session_start();
-                $_SESSION['user'] = $user;
-
-                // Jika role panitia -> cek apakah sudah connect google
-                if ($user['role'] === 'panitia') {
-                    if (empty($user['google_token'])) {
-                        // redirect otomatis ke flow google oauth
+           
+            if($user){
+                $_SESSION['id'] = $user['id'];
+                $_SESSION['name'] = $user['name'];
+                $_SESSION['role'] = $user['role'];
+                if ($user['role'] === 'organizer') {
+                    if (empty($user['remember_token'])) {
                         header("Location: index.php?page=connect");
                         exit;
                     } else {
-                        // jika token ada di DB, restore ke session agar langsung bisa dipakai
-                        $_SESSION['google_access_token'] = json_decode($user['google_token'], true);
+                        $_SESSION['token'] = json_decode($user['remember_token'], true);
                         header("Location: index.php");
                         exit;
                     }
                 }
-            // bukan panitia
-            header("Location: index.php?");
-            exit;
-            } else {
-                // login failed
-                header("Location: index.php?=login?error=1");
-                exit;
-            }
-            // if($user){
-            //     session_start();
-            //     $_SESSION['name'] = $user['name'];
-            //     $_SESSION['role'] = $user['role'];
-            //     header("Location: index.php");
-            //     exit;
-            // }else{
-            //     $error = "Username atau Password Salah";
-            //     header("Location: index.php");
                 
-            // }
+                header("Location: index.php");
+                exit;
+            }else{
+                $error = "Username atau Password Salah";
+                header("Location: index.php");
+                
+            }
         }
+        header("Location: index.php");
 
     }
 
@@ -66,11 +54,16 @@ class AuthController{
             header("location: index.php");
         }
         require "views/root/components/RegisterPage.php";
+
     }
 
     public function logout(){
         
-        session_unset();
+        $client = GoogleClientConfig::getClient();
+        if (isset($_SESSION['token'])) {
+            $client->revokeToken($_SESSION['token']); // cabut token
+            unset($_SESSION['token']); // hapus session token
+        }
         session_destroy();
 
         header("location: index.php");

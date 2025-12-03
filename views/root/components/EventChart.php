@@ -1,5 +1,5 @@
 
-    <div class="w-full max-w-4xl bg-white/80 backdrop-blur-sm p-6 rounded-2xl shadow-lg border-2 border-slate-200">
+    <div class="w-full bg-white/80 backdrop-blur-sm p-6 rounded-2xl shadow-lg border-2 border-slate-200">
         <div class="flex flex-col md:flex-row items-start md:items-center justify-between mb-6 gap-4">
             <div class="flex items-center gap-3">
                 <div class="bg-gradient-to-br from-indigo-100 to-purple-100 p-3 rounded-xl">

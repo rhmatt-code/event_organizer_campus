@@ -5,19 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Event Manager</title>
     <link rel="stylesheet" href="./views/src/output.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> -->
     
     <style>
         [data-state=active] {
             background-color: white;
             box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
         }
-        button[data-state=active].grid-list-btn {
+        button[data-state=active] {
             background-image: linear-gradient(to right, var(--tw-gradient-stops));
             --tw-gradient-from: #ca8a04;
             --tw-gradient-to: #eab308;
             --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
             color: white;
+        }
+
+        .event-wrapper {
+            max-height: 500px;
+            overflow-y: auto;
         }
 
         #popupContainer {
@@ -54,9 +59,9 @@
                             <span class="text-gray-700 font-medium"><?php echo $_SESSION['name'] ?>  </span>
                             <span class="px-2 py-1 text-xs rounded-md bg-gradient-to-r from-slate-600 to-gray-600 text-gray"><?= $_SESSION['role'] ?></span>
                             <?php if(isset($_SESSION['token'])): ?>
-                                <a href="index.php?page=connect">Connect</a>
-                            <?php else: ?>
                                 <span>Connected</span>
+                            <?php else: ?>
+                                <a href="">Connect</a>
                             <?php endif; ?>
                         </div>
                     </div>
@@ -65,8 +70,7 @@
                         Logout
                     </button></a>
                   <?php else: ?>
-                    <button id="openLogin" type="button" class="inline-flex items-center gap-2 px-4 py-2 border border-red-200 text-red-600 rounded-lg hover:bg-red-50 hover:border-red-300 text-sm font-medium">
-                        <span></span>
+                    <button id="openLogin" class="inline-flex items-center gap-2 px-4 py-2 border border-red-200 text-red-600 rounded-lg hover:bg-red-50 hover:border-red-300 text-sm font-medium">
                         Login
                     </button>
                   <?php endif; ?>
@@ -74,6 +78,12 @@
             </div>
         </div>
     </header>
+<!--  -->
+
+<!-- Form Admin -->
+<?php if(isset($_SESSION['role']) && $_SESSION['role'] == 'admin'):?>
+    <?php include "components/ListUsers.php"; ?>
+<?php else: ?>
 <!--  -->
 <!-- Card Event Paling Diminati -->
     <?php include "components/PopularEvent.php" ?>
@@ -110,52 +120,50 @@
 <!--  -->
 <!-- List Event -->
         <div class="bg-white/80 backdrop-blur-sm p-6 rounded-2xl shadow-lg border-2 border-slate-200 mb-8">
-            <div class="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
+            <div class="flex flex-col md:flex-row gap-2 items-start justify-between">
                 <div class="flex-1 w-full">
                     <div class="relative">
                         <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">🔍</span>
                         <input
                             type="text"
-                            id="search-input"
+                            id="searchInput"
                             placeholder="Cari event..."
                             class="pl-10 w-full rounded-md border-slate-200 focus:border-amber-400 focus:ring-amber-400 shadow-sm"
                         />
                     </div>
                 </div>
 
-                <div class="flex flex-wrap gap-3 items-center">
+                <div class="flex flex-wrap gap-2 items-center">
+                    <?php if(isset($_SESSION['role']) && $_SESSION['role'] === 'student'){ ?>
                     <div class="w-auto">
                         <div class="p-1 rounded-lg bg-slate-100">
-                            <button data-state="active" class="px-4 py-1.5 rounded-md text-sm font-medium">Semua Event</button>
-                            <button data-state="inactive" class="px-4 py-1.5 rounded-md text-sm font-medium text-gray-600 inline-flex items-center gap-2">
+                            <button data-state="inactive" id="EventSaya" class="px-4 py-1.5 rounded-md text-sm font-medium text-gray-600 inline-flex items-center gap-2">
                                 <span>🎟️</span> Event Saya
                             </button>
                         </div>
                     </div>
-
                     <div class="w-auto">
                         <div class="p-1 rounded-lg bg-slate-100">
-                            <button data-state="active" class="px-3 py-1.5 rounded-md text-sm font-medium">Semua</button>
-                            <button data-state="inactive" class="px-3 py-1.5 rounded-md text-sm font-medium text-gray-600">Upcoming</button>
-                            <button data-state="inactive" class="px-3 py-1.5 rounded-md text-sm font-medium text-gray-600">Ongoing</button>
-                            <button data-state="inactive" class="px-3 py-1.5 rounded-md text-sm font-medium text-gray-600">Completed</button>
+                            <button data-state="active" class="sort-btn px-3 py-1.5 rounded-md text-sm font-medium" data-sort="newest">Newest</button>
+                            <button data-state="inactive" class="sort-btn px-3 py-1.5 rounded-md text-sm font-medium text-gray-600" data-sort="oldest">Oldest</button>
                         </div>
                     </div>
-
-                    <div class="flex gap-2">
-                        <button data-state="active" class="grid-list-btn p-2 rounded-lg border">
-                            <span>GRID</span>
-                        </button>
-                        <button data-state="inactive" class="grid-list-btn p-2 rounded-lg border">
-                            <span>LIST</span>
-                        </button>
+                    <?php }elseif(isset($_SESSION['role']) && $_SESSION['role'] === 'organizer'){ ?>
+                    <div class="w-auto">
+                        <div class="p-1 rounded-lg bg-slate-100">
+                            <button data-state="active" class="filter-btn px-3 py-1.5 rounded-md text-sm font-medium" data-status="all">Semua</button>
+                            <button data-state="inactive" class="filter-btn px-3 py-1.5 rounded-md text-sm font-medium text-gray-600" data-status="published">Published</button>
+                            <button data-state="inactive" class="filter-btn px-3 py-1.5 rounded-md text-sm font-medium text-gray-600" data-status="cancelled">Cancelled</button>
+                            <button data-state="inactive" class="filter-btn px-3 py-1.5 rounded-md text-sm font-medium text-gray-600" data-status="completed">Completed</button>
+                        </div>
                     </div>
-                    <?php if(isset($_SESSION['role']) && $_SESSION['role'] === 'organizer'): ?>
                      <button id="openTambah" type="button" class="text-white font-medium py-2.5 px-4 rounded-lg shadow-lg hover:shadow-xl transition-all bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700">
                         <span class="mr-2">➕</span>
                         Tambah Event
                     </button>
-                    <?php endif; ?>
+                    
+                    <script src="views/js/EventTambah.js"></script>
+                    <?php }; ?>
                 </div>
             </div>
         </div>
@@ -166,7 +174,7 @@
         </div>
         <?php else: ?>
         <!--  -->
-        <div id="no-events-placeholder" class="text-center py-12 bg-white/80 backdrop-blur-sm rounded-2xl border-2 border-slate-200">
+        <div id="emptyMessage" class="text-center py-12 bg-white/80 backdrop-blur-sm rounded-2xl border-2 border-slate-200">
             <span class="text-7xl">🗓️</span>
             <h3 class="text-gray-900 text-xl font-semibold mt-4 mb-2">Tidak ada event</h3>
             <p class="text-gray-600">Saat ini belum ada Event Baru</p>
@@ -177,9 +185,18 @@
 <?php include "components/Login.php"; ?> 
 <?php include "components/EventEdit.php"; ?>
 <?php include "components/EventDialog.html" ?>; 
-<script src="views/js/Login.js"></script>
+
 <script src="views/js/EventDetail.js"></script>
-<script src="views/js/EventTambah.js"></script>
 <script src="views/js/EventEdit.js"></script>
-</body>
+<script src="views/js/FilterJs/MainFilter.js"></script>
+<script src="views/js/FilterJs/SearchInput.js"></script>
+<?php if(isset($_SESSION['role']) && $_SESSION['role'] == 'organizer'): ?>
+    <script src="views/js/FilterJs/ButtonFilter.js"></script>
+<?php elseif(isset($_SESSION['role']) && $_SESSION['role'] == 'student'): ;?>
+    <script src="views/js/FilterJs/ButtonEventSaya.js"></script>
+    <script src="views/js/FilterJs/ButtonNewest.js"></script>
+<?php else: ?>
+    <script src="views/js/Login.js"></script>
+<?php endif;?>
+<?php endif; ?></body>
 </html>

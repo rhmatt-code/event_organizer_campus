@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daftar Akun - Event Manager</title>
-    <link rel="stylesheet" href="./app/views/src/output.css">
+    <link rel="stylesheet" href="./views/src/output.css">
 </head>
 <body>
 

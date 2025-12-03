@@ -1,5 +1,5 @@
 
-  <div class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 transition duration-300" id="LoginCard">
+  <div id="LoginCard" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 transition duration-300" >
     <div class="bg-white/80 backdrop-blur-lg p-8 rounded-3xl shadow-2xl border-2 border-slate-200 modal-box bg-white p-6 rounded-lg shadow-lg transform transition duration-300 scale-75" >
       <div class="flex flex-1">
         <div class="mb-8 text-center md:text-left">
