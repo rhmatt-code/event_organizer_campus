@@ -15,7 +15,7 @@ class EventController{
         $top = $eventModel->getTopEvent();
         $list = $users->getAllUsers();
 
-        $userId = $_SESSION['id'];
+        $userId = isset($_SESSION['id']);
         $myEvents = $eventModel->getUserRegisteredEvents($userId);
 
         // Buat array id event yang user daftar
