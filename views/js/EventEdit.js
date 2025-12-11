@@ -24,6 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
       modalMax.value = btn.dataset.max;
       modalDescription.value =  btn.dataset.description;
       modalPrice.value =  btn.dataset.price;
+      
 
       modal.classList.remove("hidden");
       setTimeout(() => {

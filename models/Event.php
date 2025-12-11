@@ -8,17 +8,10 @@ use Google\Service\Calendar;
 class Event{
     private $db;
 
-    private function getGoogleClient() {
-        $client = new Client();
-        $client->setAuthConfig(__DIR__ . '/../config/credentials.json');
-        $client->setRedirectUri("http://localhost/fp-event_organizer_campus/index.php?page=callback");
-        $client->addScope(Calendar::CALENDAR);
-        $client->setAccessType('offline');
-        return $client;
-    }
 
     public function __construct(){
         $this->db  = (new Database())->connect();
+        $this->auth = new Auth();
     }
 
     public function getAllEvent(){
@@ -56,31 +49,35 @@ class Event{
 
     }
 
-    public function AddEvent($eventData){
-        $query = "INSERT INTO events (user_id, category_id, title, description, event_date, event_time, event_end_time, location, max_participants, price, status) VALUES (?,?,?,?,?,?,?,?,?,?,?) ";
-        $stmt = $this->db->prepare($query);
-        return $stmt->execute([$eventData['user'], $eventData['category'], $eventData['title'], $eventData['deskripsi'], $eventData['date'], $eventData['time_start'], $eventData['time_end'], $eventData['location'], $eventData['max_peserta'], $eventData['price'], $eventData['status']]);
-        
-    }
-
-    public function createEventToGoogle($eventData){
+    private function googleService()
+    {
         $client = GoogleClientConfig::getClient();
-        $auth = new Auth();
+        $token = $this->auth->getGoogleToken($_SESSION['id']);
 
-        $token = $auth->getGoogleToken($_SESSION['id']);
-        $client = $this->getGoogleClient();
-        $client->setAccessToken($token);
+        if (!$token) {
+            die("Google not connected");
+        }
+
+        $client->setAccessToken(json_decode($token, true));
 
         if ($client->isAccessTokenExpired()) {
             $client->fetchAccessTokenWithRefreshToken($client->getRefreshToken());
-            $auth->saveGoogleToken($_SESSION['id'], json_encode($client->getAccessToken()));
+            $this->auth->saveGoogleToken($_SESSION['id'], json_encode($client->getAccessToken()));
         }
 
+        return new Calendar($client);
+    }
+
+    public function AddEvent($eventData){
+        $query = "INSERT INTO events (user_id, category_id, title, description, event_date, event_time, event_end_time, location, max_participants, price, status) VALUES (?,?,?,?,?,?,?,?,?,?,?) ";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute([$eventData['user'], $eventData['category'], $eventData['title'], $eventData['deskripsi'], $eventData['date'], $eventData['time_start'], $eventData['time_end'], $eventData['location'], $eventData['max_peserta'], $eventData['price'], $eventData['status']]);
         
-        $service = new Calendar($client);
-        
-        
-        $event = new Google\Service\Calendar\Event([
+        $eventId = $this->db->insert_id;
+
+        $google = $this->googleService();
+
+         $event = new Google\Service\Calendar\Event([
             'summary' => $eventData['title'],
             'location' => $eventData['location'],
             'description' => $eventData['deskripsi'],
@@ -95,11 +92,14 @@ class Event{
 
         ]);
 
-        $calenderId = 'primary';
-        $googleEvent = $service->events->insert($calenderId, $event);
+        $googleEvent = $google->events->insert('primary', $event);
 
-        return $googleEvent->id;
+        $stmt = $this->db->prepare("UPDATE events SET google_calendar_event_id = ? WHERE id = ?");
+        $stmt->execute([$googleEvent->getId(), $eventId]);
+
+        return $eventId;
     }
+
     
     public function attachGoogleEvent($eventId, $googleId) {
         $query = $this->db->prepare("UPDATE events SET google_calendar_event_id=? WHERE id=?");
@@ -109,12 +109,54 @@ class Event{
 
     public function EditEvent($category, $title, $deskripsi, $date, $time_start, $time_end, $location, $max_peserta, $price, $status, $id){
         $query = "UPDATE events SET category_id=$category,title = '$title',  description = '$deskripsi', event_date = '$date', event_time = '$time_start', event_end_time = '$time_end', location = '$location', max_participants = '$max_peserta', price = '$price', status='$status' WHERE id = $id ";
-        return $this->db->query($query);
+        $query = $this->db->query($query);
+        
+        $stmt = $this->db->prepare("SELECT google_calendar_event_id FROM events WHERE id = ?");
+        $stmt->execute([$id]);
+        $stmt->bind_result($googleEventId);
+        $stmt->fetch();
+        $stmt->close();
+
+        if ($googleEventId) {   
+            $google = $this->googleService();
+            $event = $google->events->get('primary', $googleEventId);
+            $event->setSummary($title);
+            $event->setLocation($location);
+            $event->setDescription($deskripsi);
+            $start = new Google\Service\Calendar\EventDateTime();
+            $start->setDateTime(date('c', strtotime($time_start)));
+            $start->setTimeZone('Asia/Jakarta');
+            $event->setStart($start);
+            $end = new Google\Service\Calendar\EventDateTime();
+            $end->setDateTime(date('c', strtotime($time_end)));
+            $end->setTimeZone('Asia/Jakarta');
+            $event->setStart($end);
+
+            $google->events->update('primary', $googleEventId, $event);
+        }
+
+        return true;
     }
 
     public function deleteEvent($id){
-        $query = "delete from events where id='$id'";
-        return $this->db->query($query);
+
+        $stmt = $this->db->prepare("SELECT google_calendar_event_id FROM events WHERE id=?");
+        $stmt->execute([$id]);
+        $stmt->bind_result($googleId);
+        $stmt->fetch();
+        $stmt->close();
+        
+
+        if ($googleId) {
+            $google = $this->googleService();
+            $google->events->delete('primary', $googleId);
+        }
+
+
+        $stmt = $this->db->prepare("DELETE FROM events WHERE id=?");
+        $stmt->execute([$id]);
+
+        return true;
     }
 }
 

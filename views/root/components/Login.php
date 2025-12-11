@@ -16,7 +16,7 @@
           <label for="email" class="block text-gray-700 font-medium">Email</label>
           <div class="relative">
             <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">👤</span>
-            <input type="text" id="email" name="email" placeholder="Masukkan email"
+            <input type="text" id="email" name="email" placeholder="Masukkan email" autocomplete="email"
               class="w-full pl-10 border border-slate-200 rounded-lg py-2 focus:border-amber-400 focus:ring-amber-400 outline-none" required>
           </div>
         </div>

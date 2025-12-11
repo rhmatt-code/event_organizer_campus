@@ -1,4 +1,4 @@
-<div  class="event-wrapper" >
+<div class="event-wrapper" >
     <div id="eventContainer" class="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-3">
         <?php foreach ($data as $event): ?>
         <div class="event-card p-6 bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border-l-4 border-l-emerald-500" data-status="<?= $event['status'] ?>" data-user="<?= in_array($event['id_event'], $registeredEventIds) ? 'yes' : 'no' ?>" data-date="<?= $event['event_date'] ?>" style="border-left-color: <?= $event['color'] ?>">
@@ -17,9 +17,9 @@
 
                 <div class="text-gray-500">
                     <?php if(isset($_SESSION['role']) && ($_SESSION['role'] === 'organizer')): ?> 
-                    <button id="openEdit" class="openEdit mr-2" data-id="<?= $event['id'] ?>" data-title="<?= $event['title'] ?>" data-status="<?= $event['status'] ?>" data-description="<?= $event['description'] ?>" data-price="<?= $event['price']; ?>"  data-max="<?= $event['max_participants'] ?>" data-location="<?= $event['location'] ?>" data-date="<?= $event['event_date'] ?>" data-start="<?= date("H:i", strtotime($event['event_time'])); ?>" data-end="<?= date("H:i", strtotime($event['event_end_time'])); ?>">✏️</button>
+                    <button id="openEdit" class="openEdit mr-2" data-id="<?= $event['id_event'] ?>" data-title="<?= $event['title'] ?>" data-status="<?= $event['status'] ?>" data-description="<?= $event['description'] ?>" data-price="<?= $event['price']; ?>"  data-max="<?= $event['max_participants'] ?>" data-location="<?= $event['location'] ?>" data-date="<?= $event['event_date'] ?>" data-start="<?= date("H:i", strtotime($event['event_time'])); ?>" data-end="<?= date("H:i", strtotime($event['event_end_time'])); ?>">✏️</button>
                     
-                    <a href="index.php?page=delete&id=<?= $event['id'] ?>" title="Hapus" class="hover:text-red-600">🗑️</a>
+                    <a href="index.php?page=delete&id=<?= $event['id_event'] ?>" title="Hapus" class="hover:text-red-600">🗑️</a>
                     <?php endif; ?> 
                 </div>
                 </div>
@@ -70,13 +70,13 @@
         <?php endforeach; ?>
         
     </div>
-    <div id="emptyMessage" class=" text-center py-12 bg-white/80 backdrop-blur-sm rounded-2xl border-2 border-slate-200" style="height:500px; display:none;">
-            <span class="text-7xl">🗓️</span>
-            <h3 class="text-gray-900 text-xl font-semibold mt-4 mb-2">Tidak ada event</h3>
-            <p class="text-gray-600">Event akan muncul di sini</p>
+        <div id="emptyMessage" class=" text-center py-12 bg-white/80 backdrop-blur-sm rounded-2xl border-2 border-slate-200" style="height:500px; display:none;">
+                <span class="text-7xl">🗓️</span>
+                <h3 class="text-gray-900 text-xl font-semibold mt-4 mb-2">Tidak ada event</h3>
+                <p class="text-gray-600">Event akan muncul di sini</p>
         </div>
         <?php include "EventDialogDetail.php"; ?>
 </div>
 
-<?php $eventDataJson = json_encode($data); ?>
-<script> </script>
+
+

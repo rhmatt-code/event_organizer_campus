@@ -33,12 +33,15 @@ class AuthController{
                 header("Location: index.php");
                 exit;
             }else{
-                $error = "Username atau Password Salah";
-                header("Location: index.php");
+                echo "<script> alert('Username atau Password tidak valid');
+                window.location.href = 'index.php';
+                </script>";
                 
             }
         }
-        header("Location: index.php");
+        echo "<script> alert('Username atau Password tidak valid');
+                window.location.href = 'index.php';
+                </script>";
 
     }
 
@@ -55,6 +58,16 @@ class AuthController{
         }
         require "views/root/components/RegisterPage.php";
 
+    }
+
+    public function editakun(){
+        $id = $_GET['id'];
+        $role = $_GET['role'];
+
+        $model = new Auth();
+        $update = $model->editakun($role, $id);
+
+        header("Location: index.php");
     }
 
     public function logout(){

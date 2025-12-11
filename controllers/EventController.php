@@ -15,7 +15,7 @@ class EventController{
         $top = $eventModel->getTopEvent();
         $list = $users->getAllUsers();
 
-        $userId = isset($_SESSION['id']);
+        $userId = isset ($_SESSION['id']);
         $myEvents = $eventModel->getUserRegisteredEvents($userId);
 
         // Buat array id event yang user daftar
@@ -54,8 +54,6 @@ class EventController{
             
             $model = new Event();
             $insert = $model->AddEvent($eventData);
-            $googleEventId = $model->createEventToGoogle($eventData);
-            $model->attachGoogleEvent($insert, $googleEventId);
 
             header("Location: index.php");
         }
@@ -86,6 +84,18 @@ class EventController{
 
     public function deleteEvent($id){
         $model = new Event();
+
+        if ($event['google_event_id']) {
+        $client = GoogleClientApp::getClient();
+        $client->setAccessToken($_SESSION['google_token']);
+
+        if ($client->isAccessTokenExpired()) {
+            $client->fetchAccessTokenWithRefreshToken($client->getRefreshToken());
+        }
+
+        $service = new Google_Service_Calendar($client);
+        $service->events->delete('primary', $event['google_event_id']);
+    }
         $delete = $model->deleteEvent($id);
         header("Location: index.php");
     }

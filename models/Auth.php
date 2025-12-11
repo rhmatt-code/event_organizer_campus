@@ -30,9 +30,17 @@ class Auth{
         if($result && password_verify($password, $result["password"])){
             return $result;
         } else {
-            echo "Login Failed";
+            
+            echo "<script> alert('Username atau Password tidak valid');
+                window.location.href = 'index.php';
+                </script>";
             
         }
+    }
+
+    public function editakun($role, $id){
+        $query = "UPDATE users SET role='$role' WHERE id = $id ";
+        return $this->db->query($query);
     }
 
     public function saveGoogleToken($userId, $tokenJson) {

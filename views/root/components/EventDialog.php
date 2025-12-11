@@ -22,7 +22,7 @@
                     <input type="time" id="time_start" name="time_start" class="border rounded-lg p-2 w-full focus:ring-2 focus:ring-indigo-500" required>
                 </div>
                 <div class="grid gap-2">
-                    <label for="time" class="font-medium text-gray-700">Waktu Akhir</label>
+                    <label for="time_end" class="font-medium text-gray-700">Waktu Akhir</label>
                     <input type="time" id="time_end" name="time_end" class="border rounded-lg p-2 w-full focus:ring-2 focus:ring-indigo-500" required>
                 </div>
             </div>

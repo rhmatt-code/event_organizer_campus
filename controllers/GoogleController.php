@@ -53,7 +53,6 @@ class GoogleCalendarController {
 
             $userModel->saveGoogleEmail($userId, $userinfo->email);
             $_SESSION['google_email'] = $userinfo->email;
-            $_SESSION['google_name']  = $userinfo->name;
 
             header("Location: index.php");
             exit;

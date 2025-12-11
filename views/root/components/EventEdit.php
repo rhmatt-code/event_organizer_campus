@@ -24,7 +24,7 @@
                     <input type="time" id="edit-start" name="time_start" class="border rounded-lg p-2 w-full focus:ring-2 focus:ring-indigo-500" required>
                 </div>
                 <div class="grid gap-2">
-                    <label for="time" class="font-medium text-gray-700">Waktu Akhir</label>
+                    <label for="edit-end" class="font-medium text-gray-700">Waktu Akhir</label>
                     <input type="time" id="edit-end" name="time_end" class="border rounded-lg p-2 w-full focus:ring-2 focus:ring-indigo-500" required>
                 </div>
             </div>
@@ -60,7 +60,7 @@
 
             <div class="grid grid-cols-2 gap-4">
                 <div class="grid gap-2">
-                    <label class="font-medium text-gray-700">Kapasitas Peserta</label>
+                    <label for="edit-max" class="font-medium text-gray-700">Kapasitas Peserta</label>
                     <input type="number" id="edit-max" min="1" name="max" class="border rounded-lg p-2 w-full focus:ring-2 focus:ring-indigo-500" required>
                 </div>
                 <div class="grid gap-2">

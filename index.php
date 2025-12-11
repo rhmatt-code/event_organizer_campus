@@ -38,9 +38,9 @@ switch($page){
 
     case "editevent":    
     if(isset($_SESSION['id'])){
-        $event->addEvent();
+        $event->editEvent();
     }else{
-        header("Location: index.php");
+        // header("Location: index.php");
     }    
     break;
 
@@ -52,6 +52,14 @@ switch($page){
     }else{
         header("Location: index.php");
     }   
+    break;
+
+    case "editakun":
+        if(isset($_GET['id'])){
+            $auth->editakun();
+        }else{
+            header("Location: index.php");
+        }
     break;
 
     case "connect":

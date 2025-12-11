@@ -10,16 +10,18 @@
 
     <?php foreach($top as $index => $c): ?>
       <!-- Card 1 -->
-      <div class="p-5 rounded-xl shadow-sm border relative border-4 border-solid" style="border-color: <?= $c['color_name']; ?>">
-        <span class="absolute top-4 left-4 px-3 py-1 rounded-full text-sm font-semibold" style="background-color: <?= $c['color_name']; ?>;">#<?= $index + 1 ?></span>
-        <span class="absolute top-4 right-4 bg-white shadow px-3 py-1 rounded-full text-sm">👥 <?= $c['total_peserta'] ?> Peserta </span>
-        
+      <div class="p-6 bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border-l-4" style="border-color: <?= $c['color_name']; ?>">
+        <div class="flex justify-between mb-3"> 
+          <span class="px-3 py-1 rounded-full text-sm font-semibold" style="background-color: <?= $c['color_name']; ?>;">#<?= $index + 1 ?></span>
+          <span class="ml-auto bg-white shadow px-3 py-1 rounded-full text-sm">👥 <?= $c['total_peserta'] ?> Peserta </span>
+        </div>
+
         <div class="mt-10 flex items-center gap-3">
           
-        <div>
-        <h2 class="font-bold text-gray-800"><?= $c['category_name']; ?></h2>
-        <p class="text-gray-500 text-sm"><?= $c['description']; ?></p>
-        </div>
+          <div>
+            <h2 class="text-gray-900 font-semibold text-lg"><?= $c['category_name']; ?></h2>
+            <p class="text-gray-500 text-sm"><?= $c['description']; ?></p>
+          </div>
       </div>
       <p class="text-sm text-gray-600 mt-4"><?= $c['total_event']; ?> event tersedia</p>
       <p class="text-green-600 bg-green-100 inline-block px-2 py-1 rounded text-xs"><?= $c['percent'];?>% terisi</p>

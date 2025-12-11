@@ -27,9 +27,9 @@
             </div>
         </div>
 
-        <div class="bg-gradient-to-br from-slate-50 to-stone-50 p-4 rounded-xl border border-slate-100">
-            <div class="relative h-[350px] w-full">
-                <canvas id="eventChart"></canvas>
+        <div class="bg-gradient-to-br from-slate-50 to-stone-50 p-4 rounded-xl border border-slate-100" >
+            <div class="relative h-[350px] w-full" >
+                <canvas id="myChart" style="width: 300px; height: 300px;"></canvas>
             </div>
         </div>
 
@@ -52,5 +52,4 @@
             </div>
         </div>
     </div>
-
-    <script src="/js/Chart.js"></script>
+   
