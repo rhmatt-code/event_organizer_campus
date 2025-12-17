@@ -1,13 +1,13 @@
 <div class="event-wrapper" >
     <div id="eventContainer" class="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-3">
         <?php foreach ($data as $event): ?>
-        <div class="event-card p-6 bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border-l-4 border-l-emerald-500" data-status="<?= $event['status'] ?>" data-user="<?= in_array($event['id_event'], $registeredEventIds) ? 'yes' : 'no' ?>" data-date="<?= $event['event_date'] ?>" style="border-left-color: <?= $event['color'] ?>">
+        <div class="event-card p-6 bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border-l-4 border-l-emerald-500" data-user="<?= in_array($event['id_event'], $registeredEventIds) ? 'yes' : 'no' ?>" data-date="<?= $event['event_date'] ?>" style="border-left-color: <?= $event['color'] ?>">
             <div class="flex items-start justify-between mb-4">
             <div class="flex-1">
                 <div class="flex items-center gap-2 mb-2">
                     <h3 class="event-title text-gray-900 font-semibold text-lg"><?= $event['title']; ?></h3>
                     <span class="px-2 py-1 text-xs rounded-md bg-gradient-to-r from-emerald-600 to-teal-600 text-white">
-                        <?= $event['status']; ?>
+                        <?= ucfirst($event['status']); ?>
                     </span>
                     </div>
                     <span class="px-2 py-1 text-xs rounded-md text-white" style="background-color:<?= $event['color'];?>;">
@@ -25,7 +25,7 @@
                 </div>
 
                     <p class="text-gray-600 mb-4">
-                    <?= $event['description']; ?>
+                    <?= $event['event_description']; ?>
                     </p>
 
                 <div class="grid grid-cols-2 gap-3 mb-4 text-sm text-gray-600">
@@ -58,17 +58,33 @@
                 </div>
 
                 <?php if(!empty($_SESSION['name'])): ?>
-                    <?php if($_SESSION['role'] == 'student') :?> 
-                        <button id="openDetail" class="openModal px-4 py-2 text-sm font-medium rounded-lg bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-lg hover:shadow-xl transition-all" data-title="<?= $event['title'] ?>" data-status="<?= $event['status'] ?>" data-description="<?= $event['short_description'] ?>" data-price="<?= number_format($event['price'], 0, ',','.'); ?>" data-current="<?= $event['current_participants'] ?>" data-max="<?= $event['max_participants'] ?>" data-location="<?= $event['location'] ?>" data-date="<?= $event['event_date'] ?>" data-start="<?= date("H:i", strtotime($event['event_time'])); ?>" data-end="<?= date("H:i", strtotime($event['event_end_time'])); ?>">
-                            Daftar Sekarang
+                    <?php if($_SESSION['role'] == 'student') :?>
+                        <?php $isRegistered = in_array($event['id_event'], $registeredEventIds); ?> 
+                            <?php if ($event['status'] === 'completed'): ?>
+                                <button class="px-4 py-2 text-sm font-medium rounded-lg bg-gray-100 cursor-not-allowed">Completed</button>
+                            <?php else: ?>
+                                <button id="openDetail" class="openModal px-4 py-2 text-sm font-medium rounded-lg 
+                                <?= $isRegistered
+                                    ? 'bg-gray-100 cursor-not-allowed'
+                                    : 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white hover:shadow-xl'
+                                ?> <?= $event['status']=='completed' ? 'cursor-not-allowed' : 'cursor-not-allowed' ?>" 
+                                <?= $isRegistered ? 'disabled' : '' ?>
+                                data-idevent="<?= $event['id_event'] ?>" data-title="<?= $event['title'] ?>" data-status="<?= $event['status'] ?>" data-description="<?= $event['description'] ?>" data-price="<?= number_format($event['price'], 0, ',','.'); ?>" data-current="<?= $event['current_participants'] ?>" data-max="<?= $event['max_participants'] ?>" data-location="<?= $event['location'] ?>" data-date="<?= $event['event_date'] ?>" data-start="<?= date("H:i", strtotime($event['event_time'])); ?>" data-end="<?= date("H:i", strtotime($event['event_end_time'])); ?>">
+                                    <?= $isRegistered ? 'Sudah Terdaftar' : 'Daftar Sekarang' ?>
+                                </button>
+                            <?php endif; ?>
+                    <?php else: ?>
+                        <button class="openPeserta px-4 py-2 text-sm font-medium rounded-lg bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-lg hover:shadow-xl transition-all" data-event-id="<?= $event['id_event'] ?>">
+                            List Peserta
                         </button>
+                        
                     <?php endif; ?>
                 <?php endif; ?> 
             </div>
         </div>
         
         <?php endforeach; ?>
-        
+        <?php include "ListPendaftar.php"; ?>
     </div>
         <div id="emptyMessage" class=" text-center py-12 bg-white/80 backdrop-blur-sm rounded-2xl border-2 border-slate-200" style="height:500px; display:none;">
                 <span class="text-7xl">🗓️</span>

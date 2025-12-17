@@ -24,6 +24,19 @@ switch($page){
         $auth->login();
     break;
 
+    case "callback";
+        $auth->callback();
+    break;
+
+    case "logout":
+    if(isset($_SESSION['id'])){
+        $auth->logout();
+        $google->disconnect();
+    }else{
+        header("Location: index.php");
+    }
+    break;
+
     case "register":
         $auth->register();
     break;
@@ -40,10 +53,21 @@ switch($page){
     if(isset($_SESSION['id'])){
         $event->editEvent();
     }else{
-        // header("Location: index.php");
+        header("Location: index.php");
     }    
     break;
 
+    case "daftarEvent":    
+    if(isset($_SESSION['id'])){
+        $event->daftarEvent();
+    }else{
+        header("Location: index.php");
+    }    
+    break;
+
+    case "peserta_event":
+        $event->peserta();
+    break;
     case "delete":
     if(isset($_SESSION['id'])){
         if(isset($_GET['id'])){         
@@ -62,29 +86,6 @@ switch($page){
         }
     break;
 
-    case "connect":
-    if(isset($_SESSION['id'])){
-        $google->connect();
-    }else{
-        header("Location: index.php");
-    }
-    break;
-
-    case "callback";
-    if(isset($_SESSION['id'])){
-        $google->callback();
-    }else{
-        header("Location: index.php");
-    }
-    break;
-
-    case "logout":
-    if(isset($_SESSION['id'])){
-        $auth->logout();
-        $google->disconnect();
-    }else{
-        header("Location: index.php");
-    }
-    break;
+    
     
 }

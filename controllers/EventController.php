@@ -1,12 +1,13 @@
 <?php 
 
 require_once "models/Event.php";
+require_once "models/Notification.php";
+require_once "models/Auth.php";
 
 
 
 class EventController{
 
-    
 
     public function home(){
         $eventModel = new Event();
@@ -15,21 +16,23 @@ class EventController{
         $top = $eventModel->getTopEvent();
         $list = $users->getAllUsers();
 
-        $userId = isset ($_SESSION['id']);
-        $myEvents = $eventModel->getUserRegisteredEvents($userId);
+        if(isset($_SESSION['id'])){
+            $userId = $_SESSION['id'];
+        }else{
+            $userId = 0;
+        };
 
-        // Buat array id event yang user daftar
+        $myEvents = $eventModel->getUserRegisteredEvents($userId);   
+            
         $registeredEventIds = [];
         while ($row = $myEvents->fetch_assoc()) {
             $registeredEventIds[] = $row['id'];
         }
-
         
         $editData = null;
         if(isset($_GET['edit'])){
             $editData = $eventModel->getById($_GET['edit']);
         }
-        
         require "views/root/indexUser.php";
     }
 
@@ -45,7 +48,6 @@ class EventController{
                 'time_end' => $_POST['time_end'],
                 'location' => $_POST['location'],
                 'category' => $_POST['category'],
-                'status' => $_POST['status'],
                 'max_peserta' => $_POST['max'],
                 'price' => $_POST['price'],
                 'deskripsi' => $_POST['deskripsi'],
@@ -85,7 +87,7 @@ class EventController{
     public function deleteEvent($id){
         $model = new Event();
 
-        if ($event['google_event_id']) {
+        if ($event['google_calender_event_id']) {
         $client = GoogleClientApp::getClient();
         $client->setAccessToken($_SESSION['google_token']);
 
@@ -99,6 +101,38 @@ class EventController{
         $delete = $model->deleteEvent($id);
         header("Location: index.php");
     }
+
+    public function daftarEvent(){
+        $model = new Event();
+        $notif = new NotificationModel();
+        $user = new Auth();
+        $userId = $_SESSION['id'];
+        $eventId = $_POST['id'];
+        $daftar = $model->daftarEvent($userId, $eventId);
+        $row = $user->findById($userId);
+        
+        $notif = $notif->createNotification($userId, $eventId, $row['email']);
+        header("Location: index.php");
+        
+    }
+
+    public function peserta()
+    {
+        
+
+        $eventId = $_GET['event_id'] ?? null;
+        if (!$eventId) {
+            http_response_code(400);
+            exit;
+        }
+
+        $event = new Event();
+        $participants = $event->getByEvent((int)$eventId);
+
+        // render PARTIAL VIEW
+        require "views/root/components/_list_pendaftar.php";
+    }
+
 
     
 }

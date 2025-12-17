@@ -18,7 +18,7 @@ class GoogleCalendarController {
 
         
         $client = GoogleClientConfig::getClient();
-         if (!$client->getAccessToken()) {
+        if (!$client->getAccessToken()) {
             $authUrl = $client->createAuthUrl();
             header("Location: $authUrl");
             exit;

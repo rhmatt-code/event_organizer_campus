@@ -51,8 +51,8 @@
                 <div class="grid gap-2">
                     <label for="status" class="font-medium text-gray-700">Status</label>
                     <select id="edit-status" name="status" class="border rounded-lg p-2 w-full focus:ring-2 focus:ring-indigo-500">
-                        <option value="published">published</option>
-                        <option value="cancelled">cancelled</option>
+                        <option value="upcoming">upcoming</option>
+                        <option value="ongoing">ongoing</option>
                         <option value="completed">Completed</option>
                     </select>
                 </div>
@@ -70,7 +70,8 @@
             </div>
 
             <div class="grid gap-2">
-                <label for="description" class="font-medium text-gray-700">Deskripsi</label>
+                <la
+                el for="description" class="font-medium text-gray-700">Deskripsi</label>
                 <textarea id="edit-description" name="deskripsi" rows="4" class="border rounded-lg p-2 w-full focus:ring-2 focus:ring-indigo-500" required></textarea>
             </div>
 

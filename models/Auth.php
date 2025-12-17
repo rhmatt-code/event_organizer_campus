@@ -8,34 +8,32 @@ class Auth{
     public function __construct(){
         $this->db = (New Database())->connect();
     }
-    public function register($namalengkap, $email, $role, $password){
-        $passwordHash = password_hash($password, PASSWORD_DEFAULT);
-        
-        $result = $this->db->prepare("INSERT INTO users(name, email, role, password) VALUES (?,?,?,?)");
-        return $result->execute([$namalengkap, $email, $role, $passwordHash]);
-        
-    }
 
     public function getAllUsers(){
         $result = $this->db->query("SELECT * FROM `users`");
         return $result->fetch_all(MYSQLI_ASSOC);
     }
 
-    public function login($email, $password){
-        $statement = $this->db->prepare("SELECT * FROM users WHERE email = ?");
-        $statement->execute([$email]);
+    public function loginOrRegister($name, $email, $googleToken){
+        $stmt = $this->db->prepare("SELECT * FROM users WHERE email = ?");
+        $stmt->execute([$email]);
+        $result = $stmt->get_result();
 
-        $result = $statement->get_result()->fetch_assoc();
+        if($user = $result->fetch_assoc()){
+            $id = $user['id'];
+            $update = $this->db->prepare("UPDATE users SET remember_token = '$googleToken' WHERE id = '$id'");
+            $update->execute();
 
-        if($result && password_verify($password, $result["password"])){
-            return $result;
-        } else {
-            
-            echo "<script> alert('Username atau Password tidak valid');
-                window.location.href = 'index.php';
-                </script>";
-            
-        }
+            return $user;
+        }else{
+
+        $stmt = $this->db->prepare("INSERT INTO users (name, email, remember_token) VALUES (?,?,?)");
+        $stmt->bind_param("sss", $name, $email, $googleToken);
+        $stmt->execute();
+
+        return ['id' => $this->db->insert_id,'name' => $name, 'email' => $email, 'role' => 'student'];
+        };
+
     }
 
     public function editakun($role, $id){
@@ -48,12 +46,7 @@ class Auth{
         $stmt->execute([$tokenJson, $this->findById($userId)['google_email'] ?? null, $userId]);
         return $stmt;
     }
-
-    public function saveGoogleEmail($userId, $email) {
-        $stmt = $this->db->prepare("UPDATE users SET google_email = ? WHERE id = ?");
-        $stmt->execute([$email, $userId]);
-        return $stmt;
-    }  
+    
     public function getGoogleToken($userId)
     {
         $stmt = $this->db->prepare("SELECT remember_token FROM users WHERE id = ?");
@@ -69,8 +62,9 @@ class Auth{
     } 
 
     public function findById($id) {
-        $stmt = $this->db->query("SELECT * FROM users WHERE id = $id");
-        return $stmt->fetch_all(MYSQLI_ASSOC);
+        $stmt = $this->db->prepare("SELECT * FROM users WHERE id = $id");
+        $stmt->execute();
+        return $stmt->get_result()->fetch_assoc();
     }
 }
 

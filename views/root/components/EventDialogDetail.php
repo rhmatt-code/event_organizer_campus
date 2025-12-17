@@ -2,7 +2,7 @@
   <div class="bg-white/80 backdrop-blur-lg p-8 rounded-3xl shadow-2xl border-2 border-slate-200 modal-box bg-white p-6 rounded-lg shadow-lg transform transition duration-300 scale-75">
     <div class="flex items-center justify-between border-b pb-3 ">
       <h2 class="text-xl font-semibold text-gray-800">Detail Event</h2>
-      <button id="" class="text-gray-500 hover:text-gray-800" title="Tutup">
+      <button id="closeModal" class="text-gray-500 hover:text-gray-800" title="Tutup">
         ✕
       </button>
     </div>
@@ -16,8 +16,8 @@
             upcoming
           </span>
         </div>
-        <span class="inline-block px-3 py-1 text-sm rounded-md text-white bg-gradient-to-r from-rose-600 to-pink-600">
-          Workshop
+        <span id="modalCategory" class="inline-block px-3 py-1 text-sm rounded-md text-white bg-gradient-to-r from-rose-600 to-pink-600">
+          
         </span>
       </div>
 
@@ -86,14 +86,15 @@
         </div>
       </div>
 
-      <div class="flex gap-3">
-        <button id="closeModal" class="flex-1 border border-gray-300 rounded-lg py-2 hover:bg-gray-100">
-          Tutup
-        </button>
-        <button id="joinEventBtn" class="flex-1 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white rounded-lg py-2 shadow-lg">
-          Ikuti Acara
-        </button>
-      </div>
+      <form action="index.php?page=daftarEvent" method="POST";>
+        <input type="text" class="hidden" id="modalId" name="id">
+
+        <div class="flex gap-3">
+            <button type="submit" class="flex-1 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white rounded-lg py-2 shadow-lg">
+              Ikuti Acara
+            </button>
+        </div>
+      </form>
     </div>
   </div>
 </div>

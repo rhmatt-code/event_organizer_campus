@@ -3,6 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const modalBox = document.querySelector("#detailModal .modal-box");
   const closeBtn = document.getElementById("closeModal");
 
+  const modalId = document.getElementById("modalId");
   const modalTitle = document.getElementById("modalTitle");
   const modalDate = document.getElementById("modalDate");
   const modalStart = document.getElementById("modalStart");
@@ -16,6 +17,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.querySelectorAll(".openModal").forEach(btn => {
     btn.onclick = () => {
+
+      modalId.value = btn.dataset.idevent;
       modalTitle.innerText = btn.dataset.title;
       modalDate.innerText = btn.dataset.date;
       modalStart.innerText = btn.dataset.start;

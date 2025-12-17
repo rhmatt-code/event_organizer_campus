@@ -15,15 +15,14 @@ class Event{
     }
 
     public function getAllEvent(){
-        $result = $this->db->query("SELECT events.id AS id_event, events.*, categories.* FROM events INNER JOIN categories ON events.category_id = categories.id ORDER BY `category_id` DESC;");
+        $result = $this->db->query("SELECT events.id AS id_event, events.*, events.description AS event_description, categories.* FROM events INNER JOIN categories ON events.category_id = categories.id ORDER BY `category_id` DESC;");
         return $result->fetch_all(MYSQLI_ASSOC);
     }
 
     public function getUserRegisteredEvents($userId) {
-        $sql = "SELECT e.* FROM events e JOIN event_registrations r ON e.id = r.event_id WHERE r.user_id = ?;";
+        $sql = "SELECT e.* FROM events e JOIN event_registrations r ON e.id = r.event_id WHERE r.user_id = $userId;";
         
         $stmt = $this->db->prepare($sql);
-        $stmt->bind_param("i", $userId);
         $stmt->execute();
         return $stmt->get_result();
     }
@@ -69,9 +68,9 @@ class Event{
     }
 
     public function AddEvent($eventData){
-        $query = "INSERT INTO events (user_id, category_id, title, description, event_date, event_time, event_end_time, location, max_participants, price, status) VALUES (?,?,?,?,?,?,?,?,?,?,?) ";
+        $query = "INSERT INTO events (user_id, category_id, title, description, event_date, event_time, event_end_time, location, max_participants, price) VALUES (?,?,?,?,?,?,?,?,?,?) ";
         $stmt = $this->db->prepare($query);
-        $stmt->execute([$eventData['user'], $eventData['category'], $eventData['title'], $eventData['deskripsi'], $eventData['date'], $eventData['time_start'], $eventData['time_end'], $eventData['location'], $eventData['max_peserta'], $eventData['price'], $eventData['status']]);
+        $stmt->execute([$eventData['user'], $eventData['category'], $eventData['title'], $eventData['deskripsi'], $eventData['date'], $eventData['time_start'], $eventData['time_end'], $eventData['location'], $eventData['max_peserta'], $eventData['price']]);
         
         $eventId = $this->db->insert_id;
 
@@ -157,6 +156,22 @@ class Event{
         $stmt->execute([$id]);
 
         return true;
+    }
+
+    public function daftarEvent($userId, $eventId){
+        $stmt = $this->db->prepare("UPDATE events set current_participants = current_participants + 1 WHERE id = $eventId");
+        $stmt->execute();
+
+        $stmt = $this->db->prepare("INSERT INTO event_registrations (user_id, event_id) VALUES ('$userId', '$eventId')");
+        $stmt->execute();
+        
+        return true;
+    }
+
+    public function getByEvent($eventId) {
+        $stmt = $this->db->prepare("SELECT u.name, u.email, er.created_at FROM event_registrations er JOIN users u ON u.id = er.user_id WHERE er.event_id = '$eventId'");
+        $stmt->execute();
+        return $stmt->get_result();
     }
 }
 

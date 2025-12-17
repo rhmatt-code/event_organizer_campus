@@ -6,44 +6,49 @@ require "config/GoogleClient.php";
 class AuthController{
     
     public function login(){
-        
-        if ($_SERVER['REQUEST_METHOD'] == "POST"){
-            $email = $_POST["email"];
-            $password = $_POST["password"];
-
-            $userModel = new Auth();
-            $user = $userModel->login($email, $password);
-
-           
-            if($user){
-                $_SESSION['id'] = $user['id'];
-                $_SESSION['name'] = $user['name'];
-                $_SESSION['role'] = $user['role'];
-                if ($user['role'] === 'organizer') {
-                    if (empty($user['remember_token'])) {
-                        header("Location: index.php?page=connect");
-                        exit;
-                    } else {
-                        $_SESSION['token'] = json_decode($user['remember_token'], true);
-                        header("Location: index.php");
-                        exit;
-                    }
-                }
-                
-                header("Location: index.php");
-                exit;
-            }else{
-                echo "<script> alert('Username atau Password tidak valid');
-                window.location.href = 'index.php';
-                </script>";
-                
-            }
+        $client = GoogleClientConfig::getClient();
+        if (!$client->getAccessToken()) {
+            $authUrl = $client->createAuthUrl();
+            header("Location: $authUrl");
+            exit;
         }
-        echo "<script> alert('Username atau Password tidak valid');
-                window.location.href = 'index.php';
-                </script>";
 
     }
+
+    public function callback() {
+        if (!isset($_GET['code'])) {
+            die('Login gagal');
+        }
+
+        $client = GoogleClientConfig::getClient();
+        $token = $client->fetchAccessTokenWithAuthCode($_GET['code']);
+
+        if (isset($token['error'])) {
+            header("Location: index.php");
+        }
+
+        $client->setAccessToken($token);
+
+        $oauth = new Google\Service\Oauth2($client);
+        $userInfo = $oauth->userinfo->get();
+
+        $email = $userInfo->email;
+        $name  = $userInfo->name;
+
+        $auth = new Auth();
+
+        $user = $auth->loginOrRegister($name, $email, json_encode($token));
+
+        $_SESSION['id'] = $user['id'];
+        $_SESSION['name'] = $user['name'];
+        $_SESSION['email'] = $user['email'];
+        $_SESSION['role'] = $user['role'];
+        $_SESSION['token'] = json_encode($token);
+
+        header("Location: index.php");
+        exit;
+    }
+
 
     public function register(){
         if($_SERVER["REQUEST_METHOD"] == "POST"){
