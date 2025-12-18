@@ -33,7 +33,7 @@ class Event{
     }
 
     public function getTopEvent(){
-        $result = $this->db->query("SELECT c.id AS category_id, c.name AS category_name, c.description, c.color AS color_name, COUNT(DISTINCT e.id) AS total_event, COUNT(r.id) AS total_peserta, SUM(e.max_participants) AS total_kapasitas FROM categories c LEFT JOIN events e ON e.category_id = c.id LEFT JOIN event_registrations r ON r.event_id = e.id GROUP BY c.id ORDER BY total_peserta DESC LIMIT 3;");
+        $result = $this->db->query("SELECT c.id AS category_id, c.name AS category_name, c.description, c.color AS color_name, COUNT(DISTINCT e.id) AS total_event, COUNT(r.id) AS total_peserta, SUM(e.max_participants) AS total_kapasitas FROM categories c LEFT JOIN events e ON e.category_id = c.id LEFT JOIN event_registrations r ON r.event_id = e.id GROUP BY c.id ORDER BY total_peserta DESC;");
         $rows = $result->fetch_all(MYSQLI_ASSOC);
 
         foreach ($rows as $i => $row) {
@@ -46,6 +46,11 @@ class Event{
         return $rows;
     
 
+    }
+
+     public function getRecommendation(){
+        $result = $this->getTopEvent();
+        return "Disarankan memperbanyak event jenis <b>{$result[0]['category_name']}</b> karena paling diminati mahasiswa.";
     }
 
     private function googleService()

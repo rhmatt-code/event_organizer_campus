@@ -15,6 +15,8 @@ class EventController{
         $data = $eventModel->getAllEvent();
         $top = $eventModel->getTopEvent();
         $list = $users->getAllUsers();
+        $recommendation = $eventModel->getRecommendation();
+
 
         if(isset($_SESSION['id'])){
             $userId = $_SESSION['id'];
@@ -34,6 +36,24 @@ class EventController{
             $editData = $eventModel->getById($_GET['edit']);
         }
         require "views/root/indexUser.php";
+    }
+
+     public function downloadCSV(){
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename=laporan_analitik_event.csv');
+
+        $output = fopen("php://output", "w");
+        fputcsv($output, ['Jenis Event', 'Total Peserta']);
+        $service = new Event();
+        $data = $service->getTopEvent();
+        foreach ($data as $row) {
+            fputcsv($output, [
+                $row['category_name'],
+                $row['total_peserta'],
+            ]);
+        }
+        fclose($output);
+        exit;
     }
 
     

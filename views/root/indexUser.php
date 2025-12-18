@@ -53,18 +53,38 @@
                 </div>
                 <div class="flex items-center gap-4">
                   <?php if(isset($_SESSION['name'])): ?>
-                  <div class="bg-gradient-to-r from-slate-100 to-stone-100 px-4 py-2 rounded-xl border border-slate-200"> 
+                 <div class="relative inline-block text-left">
+                    <!-- Trigger -->
+                    <button id="profileBtn"
+                        class="bg-gradient-to-r from-slate-100 to-stone-100 px-4 py-2 rounded-xl border border-slate-200 hover:shadow transition">
                         <div class="flex items-center gap-2">
                             <span class="text-xl">👤</span>
-                            <span class="text-gray-700 font-medium"><?php echo $_SESSION['name'] ?>   </span>
-                            <span class="px-2 py-1 text-xs font-semibold rounded-md bg-gradient-to-r from-emerald-600 to-teal-600 text-white to-gray-600 text-gray"><?= ucfirst($_SESSION['role']) ?></span>
-                            
+                            <span class="text-gray-700 font-medium">
+                                <?php echo $_SESSION['name'] ?>
+                            </span>
+                            <span
+                                class="px-2 py-1 text-xs font-semibold rounded-md 
+                                bg-gradient-to-r from-emerald-600 to-teal-600 text-white">
+                                <?= ucfirst($_SESSION['role']) ?>
+                            </span>
+                            <!-- Icon panah -->
+                            <svg class="w-4 h-4 text-gray-500 ml-1" fill="none" stroke="currentColor"
+                                stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+                            </svg>
                         </div>
+                    </button>
+
+                    <!-- Dropdown -->
+                    <div id="profileMenu"
+                        class="hidden absolute right-0 mt-2 w-52 bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden z-50">
+                        <a href="index.php?page=logout"
+                            class="flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50">
+                            🔒 Logout
+                        </a>
                     </div>
-                    <a href="index.php?page=logout"><button type="button" class="inline-flex items-center gap-2 px-4 py-2 border border-red-200 text-red-600 rounded-lg hover:bg-red-50 hover:border-red-300 text-sm font-medium">
-                        <span>🔒</span>
-                        Logout
-                    </button></a>
+                </div>
+
                   <?php else: ?>
                     <a href="index.php?page=login" class="inline-flex items-center gap-2 px-4 py-2 border border-red-200 text-red-600 rounded-lg hover:bg-red-50 hover:border-red-300 text-sm font-medium">
                         Login
@@ -208,6 +228,23 @@
     <script src="views/js/FilterJs/ButtonEventSaya.js"></script>
     <script src="views/js/FilterJs/ButtonNewest.js"></script>
 <?php endif;?>
+<?php endif; ?>
+
+<?php if(isset($_SESSION['name'])): ?>
+    <script>
+    const profileBtn = document.getElementById('profileBtn');
+    const profileMenu = document.getElementById('profileMenu');
+
+    profileBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        profileMenu.classList.toggle('hidden');
+    });
+
+    document.addEventListener('click', () => {
+        profileMenu.classList.add('hidden');
+    });
+</script>
+
 <?php endif; ?>
 
 </body>

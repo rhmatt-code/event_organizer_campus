@@ -36,9 +36,9 @@ switch($page){
         header("Location: index.php");
     }
     break;
-
-    case "register":
-        $auth->register();
+    
+    case "analytics_csv":
+        $event->downloadCSV();
     break;
 
     case "addevent":

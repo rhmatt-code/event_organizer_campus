@@ -50,21 +50,6 @@ class AuthController{
     }
 
 
-    public function register(){
-        if($_SERVER["REQUEST_METHOD"] == "POST"){
-            $namalengkap = $_POST["fullname"];
-            $email = $_POST["email"];
-            $password = $_POST["password"];
-            $role = "student";
-
-            $userModel = new Auth();
-            $update = $userModel->register($namalengkap, $email, $role, $password);
-            header("location: index.php");
-        }
-        require "views/root/components/RegisterPage.php";
-
-    }
-
     public function editakun(){
         $id = $_GET['id'];
         $role = $_GET['role'];
