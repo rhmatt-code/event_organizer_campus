@@ -9,7 +9,7 @@
 
       <p class="text-gray-600 mb-6">Kategori event dengan pendaftar terbanyak</p>
     </div>
-    <?php if(isset($_SESSION['name'])) : ?>
+    <?php if(isset($_SESSION['role']) && $_SESSION['role'] == 'organizer') : ?>
     <div class="flex items-center gap-4">
       <a href="index.php?page=analytics_csv" class="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white shadow-lg hover:shadow-xl transition-all rounded-lg text-sm font-medium">
          Unduh Laporan CSV

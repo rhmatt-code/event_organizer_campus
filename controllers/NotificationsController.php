@@ -1,14 +1,14 @@
 <?php
 
 use PHPMailer\PHPMailer\PHPMailer;
-require_once "models/Notications.php";
+//require_once "models/Notification.php";
 
 class NotificationController
 {
+    
     public function send()
     {
         $list = $this->notif->getPendingReminder(30);
-
         while ($row = $list->fetch_assoc()) {
 
             $mail = new PHPMailer(true);

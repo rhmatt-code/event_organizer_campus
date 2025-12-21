@@ -22,7 +22,7 @@
                     <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                 </svg>
                 <span id="total-participants" class="text-gray-700 font-medium text-sm">
-                    Total: 0 Peserta
+                    Total: <?php echo count($participants); ?> Peserta
                 </span>
             </div>
         </div>
@@ -30,25 +30,6 @@
         <div class="bg-gradient-to-br from-slate-50 to-stone-50 p-4 rounded-xl border border-slate-100" >
             <div class="relative h-[350px] w-full" >
                 <canvas id="myChart" style="width: 300px; height: 300px;"></canvas>
-            </div>
-        </div>
-
-        <div class="mt-6 flex flex-wrap gap-4 justify-center text-sm">
-            <div class="flex items-center gap-2">
-                <div class="w-4 h-4 rounded bg-emerald-600"></div>
-                <span class="text-gray-700">≥80% Terisi</span>
-            </div>
-            <div class="flex items-center gap-2">
-                <div class="w-4 h-4 rounded bg-amber-600"></div>
-                <span class="text-gray-700">50-79% Terisi</span>
-            </div>
-            <div class="flex items-center gap-2">
-                <div class="w-4 h-4 rounded bg-yellow-500"></div>
-                <span class="text-gray-700">20-49% Terisi</span>
-            </div>
-            <div class="flex items-center gap-2">
-                <div class="w-4 h-4 rounded bg-[#6366f1]"></div> <!-- Indigo -->
-                <span class="text-gray-700">&lt;20% Terisi</span>
             </div>
         </div>
     </div>

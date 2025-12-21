@@ -1,5 +1,6 @@
 <?php 
 
+
 require_once "models/Auth.php";
 require "config/GoogleClient.php";
 
@@ -64,8 +65,8 @@ class AuthController{
         
         $client = GoogleClientConfig::getClient();
         if (isset($_SESSION['token'])) {
-            $client->revokeToken($_SESSION['token']); // cabut token
-            unset($_SESSION['token']); // hapus session token
+            $client->revokeToken($_SESSION['token']);
+            unset($_SESSION['token']);
         }
         session_destroy();
 

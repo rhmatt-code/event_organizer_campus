@@ -7,6 +7,7 @@ use Google\Service\Calendar;
 
 class Event{
     private $db;
+    private $auth;
 
 
     public function __construct(){
@@ -15,7 +16,7 @@ class Event{
     }
 
     public function getAllEvent(){
-        $result = $this->db->query("SELECT events.id AS id_event, events.*, events.description AS event_description, categories.* FROM events INNER JOIN categories ON events.category_id = categories.id ORDER BY `category_id` DESC;");
+        $result = $this->db->query("SELECT events.id AS id_event, events.*, events.description AS event_description, categories.*, users.name as user_name FROM events INNER JOIN categories ON events.category_id = categories.id JOIN users ON events.user_id = users.id ORDER BY `category_id` DESC;");
         return $result->fetch_all(MYSQLI_ASSOC);
     }
 
@@ -80,17 +81,22 @@ class Event{
         $eventId = $this->db->insert_id;
 
         $google = $this->googleService();
+        $startTime = $eventData['date']. ' ' .$eventData['time_start'];
+        $endTime = $eventData['date']. ' ' .$eventData['time_end'];
+        
+        $start = new DateTime($startTime, new DateTimeZone('Asia/Jakarta'));
+        $end   = new DateTime($endTime,   new DateTimeZone('Asia/Jakarta'));
 
-         $event = new Google\Service\Calendar\Event([
+        $event = new Google\Service\Calendar\Event([
             'summary' => $eventData['title'],
             'location' => $eventData['location'],
             'description' => $eventData['deskripsi'],
             'start' => [
-                'dateTime' => date('c', strtotime($eventData['time_start'])),
+                'dateTime' => $start->format(DateTime::RFC3339),
                 'timeZone' => 'Asia/Jakarta',
             ],   
             'end' => [
-                'dateTime' => date('c', strtotime($eventData['time_end'])),
+                'dateTime' => $end->format(DateTime::RFC3339),
                 'timeZone' => 'Asia/Jakarta',
             ]
 
@@ -111,28 +117,34 @@ class Event{
     }
 
 
-    public function EditEvent($category, $title, $deskripsi, $date, $time_start, $time_end, $location, $max_peserta, $price, $status, $id){
-        $query = "UPDATE events SET category_id=$category,title = '$title',  description = '$deskripsi', event_date = '$date', event_time = '$time_start', event_end_time = '$time_end', location = '$location', max_participants = '$max_peserta', price = '$price', status='$status' WHERE id = $id ";
+    public function EditEvent($category, $title, $deskripsi, $date, $time_start, $time_end, $location, $max_peserta, $price, $id){
+        $query = "UPDATE events SET category_id=$category,title = '$title',  description = '$deskripsi', event_date = '$date', event_time = '$time_start', event_end_time = '$time_end', location = '$location', max_participants = '$max_peserta', price = '$price' WHERE id = $id ";
         $query = $this->db->query($query);
         
         $stmt = $this->db->prepare("SELECT google_calendar_event_id FROM events WHERE id = ?");
         $stmt->execute([$id]);
-        $stmt->bind_result($googleEventId);
+        $stmt->bind_result($event);
         $stmt->fetch();
         $stmt->close();
+        
+        $startTime = $date. ' ' .$time_start;
+        $endTime = $date. ' ' .$time_end;
+        
+        $start = new DateTime($startTime, new DateTimeZone('Asia/Jakarta'));
+        $end   = new DateTime($endTime,   new DateTimeZone('Asia/Jakarta'));
 
         if ($googleEventId) {   
             $google = $this->googleService();
-            $event = $google->events->get('primary', $googleEventId);
+            $event = $google->events->get('primary', $event);
             $event->setSummary($title);
             $event->setLocation($location);
             $event->setDescription($deskripsi);
             $start = new Google\Service\Calendar\EventDateTime();
-            $start->setDateTime(date('c', strtotime($time_start)));
+            $start->setDateTime($start);
             $start->setTimeZone('Asia/Jakarta');
             $event->setStart($start);
             $end = new Google\Service\Calendar\EventDateTime();
-            $end->setDateTime(date('c', strtotime($time_end)));
+            $end->setDateTime($end->format(DateTime::RFC3339));
             $end->setTimeZone('Asia/Jakarta');
             $event->setStart($end);
 
@@ -143,40 +155,93 @@ class Event{
     }
 
     public function deleteEvent($id){
-
-        $stmt = $this->db->prepare("SELECT google_calendar_event_id FROM events WHERE id=?");
-        $stmt->execute([$id]);
-        $stmt->bind_result($googleId);
-        $stmt->fetch();
-        $stmt->close();
+        $stmtGoogle = $this->db->prepare("SELECT google_calendar_event_id FROM events WHERE id=?");
+        $stmtGoogle->execute([$id]);
+        $stmtGoogle->bind_result($googleId);
+        $stmtGoogle->fetch();
+        $stmtGoogle->close();
         
-
-        if ($googleId) {
+        if (!empty($googleId)) {
+           try {
+            
             $google = $this->googleService();
             $google->events->delete('primary', $googleId);
+            
+            } catch (Google_Service_Exception $e) {
+                $errorCode = $e->getCode();
+                
+                if ($errorCode == 404 || $errorCode == 410) {
+                    error_log("Event $googleId sudah dihapus dari Google Calendar");
+                }
+                
+                error_log("Error menghapus Google Calendar event: " . $e->getMessage());
+                
+                
+            }
         }
 
-
-        $stmt = $this->db->prepare("DELETE FROM events WHERE id=?");
-        $stmt->execute([$id]);
-
-        return true;
+        $stmt1 = $this->db->prepare("DELETE FROM notifications WHERE event_id = ?");
+        $delete1 = $stmt1->execute([$id]);
+        $stmt2 = $this->db->prepare("DELETE FROM events WHERE id = ?");
+        $delete2 = $stmt2->execute([$id]);
+        
+        
+        return ($stmtGoogle && $delete1 && $delete2);
     }
 
     public function daftarEvent($userId, $eventId){
         $stmt = $this->db->prepare("UPDATE events set current_participants = current_participants + 1 WHERE id = $eventId");
         $stmt->execute();
+        
+        $eventData = $this->getById((int)$eventId);
+
+        $google = $this->googleService();
+        $startTime = $eventData['event_date']. ' ' .$eventData['event_time'];
+        $endTime = $eventData['event_date']. ' ' .$eventData['event_end_time'];
+        
+        $start = new DateTime($startTime, new DateTimeZone('Asia/Jakarta'));
+        $end   = new DateTime($endTime,   new DateTimeZone('Asia/Jakarta'));
+
+        $event = new Google\Service\Calendar\Event([
+            'summary' => $eventData['title'],
+            'location' => $eventData['location'],
+            'description' => $eventData['description'],
+            'start' => [
+                'dateTime' => $start->format(DateTime::RFC3339),
+                'timeZone' => 'Asia/Jakarta',
+            ],   
+            'end' => [
+                'dateTime' => $end->format(DateTime::RFC3339),
+                'timeZone' => 'Asia/Jakarta',
+            ]
+
+        ]);
+
+        $googleEvent = $google->events->insert('primary', $event);
 
         $stmt = $this->db->prepare("INSERT INTO event_registrations (user_id, event_id) VALUES ('$userId', '$eventId')");
         $stmt->execute();
         
         return true;
     }
-
-    public function getByEvent($eventId) {
-        $stmt = $this->db->prepare("SELECT u.name, u.email, er.created_at FROM event_registrations er JOIN users u ON u.id = er.user_id WHERE er.event_id = '$eventId'");
+    
+    public function getPendaftar($eventId) {
+        $stmt = $this->db->prepare("SELECT * FROM list_pendaftars WHERE id = $eventId");
         $stmt->execute();
         return $stmt->get_result();
+    }
+    
+    public function getRegisteredEvents(){
+        $stmt = $this->db->query("SELECT id FROM event_registrations");
+        
+        return $stmt->fetch_all(MYSQLI_ASSOC);
+    }
+
+    public function getByEvent($eventId) {
+        $stmt = $this->db->prepare("SELECT u.id, u.name, u.email, er.created_at, e.google_calendar_event_id FROM event_registrations er JOIN users u ON u.id = er.user_id JOIN events e ON e.id = er.event_id WHERE er.event_id = '$eventId'");
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result->fetch_assoc();
     }
 }
 

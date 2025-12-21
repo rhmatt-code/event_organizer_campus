@@ -1,13 +1,13 @@
 <div class="event-wrapper" >
     <div id="eventContainer" class="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-3">
         <?php foreach ($data as $event): ?>
-        <div class="event-card p-6 bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border-l-4 border-l-emerald-500" data-user="<?= in_array($event['id_event'], $registeredEventIds) ? 'yes' : 'no' ?>" data-date="<?= $event['event_date'] ?>" style="border-left-color: <?= $event['color'] ?>">
+        <div class="event-card p-6 bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border-l-4 border-l-emerald-500" data-status="<?= $event['status'] ?>" data-user="<?= in_array($event['id_event'], $registeredEventIds) ? 'yes' : 'no' ?>" data-date="<?= $event['event_date'] ?>" style="border-left-color: <?= $event['color'] ?>">
             <div class="flex items-start justify-between mb-4">
             <div class="flex-1">
                 <div class="flex items-center gap-2 mb-2">
                     <h3 class="event-title text-gray-900 font-semibold text-lg"><?= $event['title']; ?></h3>
                     <span class="px-2 py-1 text-xs rounded-md bg-gradient-to-r from-emerald-600 to-teal-600 text-white">
-                        <?= ucfirst($event['status']); ?>
+                        <?= $event['status']; ?>
                     </span>
                     </div>
                     <span class="px-2 py-1 text-xs rounded-md text-white" style="background-color:<?= $event['color'];?>;">
@@ -16,43 +16,58 @@
                 </div>
 
                 <div class="text-gray-500">
-                    <?php if(isset($_SESSION['role']) && ($_SESSION['role'] === 'organizer')): ?> 
-                    <button id="openEdit" class="openEdit mr-2" data-id="<?= $event['id_event'] ?>" data-title="<?= $event['title'] ?>" data-status="<?= $event['status'] ?>" data-description="<?= $event['description'] ?>" data-price="<?= $event['price']; ?>"  data-max="<?= $event['max_participants'] ?>" data-location="<?= $event['location'] ?>" data-date="<?= $event['event_date'] ?>" data-start="<?= date("H:i", strtotime($event['event_time'])); ?>" data-end="<?= date("H:i", strtotime($event['event_end_time'])); ?>">✏️</button>
+                    <?php if(isset($_SESSION['role']) && ($_SESSION['role'] === 'organizer')): ?>
+                    <el-dropdown class="inline-block">
+                      <button class="">
+                        <i class="fa-solid fa-bars"></i>
+                      </button>
                     
-                    <a href="index.php?page=delete&id=<?= $event['id_event'] ?>" title="Hapus" class="hover:text-red-600">🗑️</a>
+                      <el-menu anchor="bottom end" popover class="w-56 origin-top-right rounded-md outline-1 -outline-offset-1 outline-white/10 transition transition-discrete [--anchor-gap:--spacing(2)] data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in">
+                        <div class="py-1">
+                         <button id="openEdit" class="rounded-md px-4 py-2 text-sm text-gray-300 focus:bg-white/5 focus:text-white focus:outline-hidden  <?= $event['user_name']==$_SESSION['name'] ? 'openEdit bg-black/10 hover:bg-black/20' : 'bg-black/50 cursor-not-allowed text-white' ?>" data-id="<?= $event['id_event'] ?>" data-title="<?= $event['title'] ?>" data-status="<?= $event['status'] ?>" data-description="<?= $event['event_description'] ?>" data-price="<?= $event['price']; ?>"  data-max="<?= $event['max_participants'] ?>" data-location="<?= $event['location'] ?>" data-date="<?= $event['event_date'] ?>" data-start="<?= date("H:i", strtotime($event['event_time'])); ?>" data-end="<?= date("H:i", strtotime($event['event_end_time'])); ?>"><i class="fa-solid fa-pen-to-square"></i> Edit</button>
+                    
+                        <button command="show-modal" commandfor="delete(<?= $event['id_event']?>)"  class="rounded-md px-4 py-2 text-sm text-gray-300 focus:bg-white/5 focus:text-white focus:outline-hidden  <?= $event['user_name']==$_SESSION['name']? 'bg-black/10 hover:bg-black/20' : 'bg-black/50 cursor-not-allowed text-white'?>" <?= $event['user_name']==$_SESSION['name']?  : 'disabled'?>><i class="fa-solid fa-trash"></i> Hapus</button>
+                        
+                        </div>
+                      </el-menu>
+                    </el-dropdown>
+
+                         <?php include "DeleteAlert.php" ?>
                     <?php endif; ?> 
                 </div>
                 </div>
-
+                    <span class="text-gray-600 mb-4">
+                        <span class="font-semibold">By name:</span> <?= $event['user_name'] ?>
+                    </span>
                     <p class="text-gray-600 mb-4">
                     <?= $event['event_description']; ?>
                     </p>
 
                 <div class="grid grid-cols-2 gap-3 mb-4 text-sm text-gray-600">
                 <div class="flex items-center gap-2">
-                    📅 <span><?= $event['event_date']; ?></span>
+                    <i class="fa-solid fa-calendar"></i></i> <span><?= $event['event_date']; ?></span>
                 </div>
                 <div class="flex items-center gap-2">
-                    ⏰ <span><?= date("H:i", strtotime($event['event_time'])); ?> - <?= date("H:i", strtotime($event['event_end_time'])); ?></span>
+                    <i class="fa-solid fa-clock"></i><span><?= date("H:i", strtotime($event['event_time'])); ?> - <?= date("H:i", strtotime($event['event_end_time'])); ?></span>
                 </div>
                 <div class="flex items-center gap-2">
-                    📍 <span><?= $event['location']; ?></span>
+                    <i class="fa-solid fa-location-pin"></i> <span><?= $event['location']; ?></span>
                 </div>
                 <div class="flex items-center gap-2">
-                    👥 <span><?= $event['max_participants']; ?> kapasitas</span>
+                    <i class="fa-solid fa-users"></i> <span><?= $event['max_participants']; ?> Kapasitas</span>
                 </div>
                 </div>
 
                 <div class="flex items-center justify-between pt-4 border-t border-gray-200">
                 <div class="flex flex-col text-sm text-gray-700">
                     <div class="flex items-center gap-2 mb-1">
-                    ✅ <span><?= $event['current_participants']; ?>/<?= $event['max_participants']; ?> terdaftar</span>
+                    <i class="fa-solid fa-check"></i><span><?= $event['current_participants']; ?>/<?= $event['max_participants']; ?> terdaftar</span>
                     </div>
                     <div class="flex items-center gap-2">
                     <?php if ($event['price'] == 0.00) : ?>
-                    💳 <span class="font-medium text-gray-900">Gratis!</span>
+                    <i class="fa-solid fa-payment"> </i><span class="font-medium text-gray-900">Gratis!</span>
                     <?php else: ?>
-                    💳 <span class="font-medium text-gray-900">Rp<?= number_format($event['price'], 0, ',','.'); ?></span>
+                    <i class="fa-solid fa-payment"> </i><span class="font-medium text-gray-900">Rp<?= number_format($event['price'], 0, ',','.'); ?></span>
                     <?php endif; ?>
                     </div>
                 </div>
@@ -60,24 +75,25 @@
                 <?php if(!empty($_SESSION['name'])): ?>
                     <?php if($_SESSION['role'] == 'student') :?>
                         <?php $isRegistered = in_array($event['id_event'], $registeredEventIds); ?> 
-                            <?php if ($event['status'] === 'completed'): ?>
+                           <?php if ($event['status'] === 'completed'): ?>
                                 <button class="px-4 py-2 text-sm font-medium rounded-lg bg-gray-100 cursor-not-allowed">Completed</button>
+                            <?php elseif($event['current_participants'] == $event['max_participants']): ?>
+                                <button class="px-4 py-2 text-sm font-medium rounded-lg bg-gray-100 cursor-not-allowed">Full</button>
                             <?php else: ?>
                                 <button id="openDetail" class="openModal px-4 py-2 text-sm font-medium rounded-lg 
                                 <?= $isRegistered
                                     ? 'bg-gray-100 cursor-not-allowed'
                                     : 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white hover:shadow-xl'
-                                ?> <?= $event['status']=='completed' ? 'cursor-not-allowed' : 'cursor-not-allowed' ?>" 
+                                ?>" 
                                 <?= $isRegistered ? 'disabled' : '' ?>
-                                data-idevent="<?= $event['id_event'] ?>" data-title="<?= $event['title'] ?>" data-status="<?= $event['status'] ?>" data-description="<?= $event['description'] ?>" data-price="<?= number_format($event['price'], 0, ',','.'); ?>" data-current="<?= $event['current_participants'] ?>" data-max="<?= $event['max_participants'] ?>" data-location="<?= $event['location'] ?>" data-date="<?= $event['event_date'] ?>" data-start="<?= date("H:i", strtotime($event['event_time'])); ?>" data-end="<?= date("H:i", strtotime($event['event_end_time'])); ?>">
+                                data-idevent="<?= $event['id_event'] ?>" data-title="<?= $event['title'] ?>" data-status="<?= $event['status'] ?>" data-description="<?= $event['event_description'] ?>" data-price="<?= number_format($event['price'], 0, ',','.'); ?>" data-current="<?= $event['current_participants'] ?>" data-max="<?= $event['max_participants'] ?>" data-location="<?= $event['location'] ?>" data-date="<?= $event['event_date'] ?>" data-start="<?= date("H:i", strtotime($event['event_time'])); ?>" data-end="<?= date("H:i", strtotime($event['event_end_time'])); ?>">
                                     <?= $isRegistered ? 'Sudah Terdaftar' : 'Daftar Sekarang' ?>
                                 </button>
                             <?php endif; ?>
                     <?php else: ?>
-                        <button class="openPeserta px-4 py-2 text-sm font-medium rounded-lg bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-lg hover:shadow-xl transition-all" data-event-id="<?= $event['id_event'] ?>">
+                        <button class="openPeserta px-4 py-2 text-sm font-medium rounded-lg bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-lg hover:bg-black/20" data-event-id="<?= $event['id_event'] ?>">
                             List Peserta
                         </button>
-                        
                     <?php endif; ?>
                 <?php endif; ?> 
             </div>

@@ -1,8 +1,10 @@
 <?php 
 
+
 require_once "models/Event.php";
 require_once "models/Notification.php";
 require_once "models/Auth.php";
+
 
 
 
@@ -15,6 +17,7 @@ class EventController{
         $data = $eventModel->getAllEvent();
         $top = $eventModel->getTopEvent();
         $list = $users->getAllUsers();
+        $participants = $eventModel->getRegisteredEvents();
         $recommendation = $eventModel->getRecommendation();
 
 
@@ -81,6 +84,7 @@ class EventController{
         }
     }
 
+
     
 
     public function editEvent(){
@@ -91,14 +95,13 @@ class EventController{
             $time_end = $_POST['time_end'];
             $location = $_POST['location'];
             $category = $_POST['category'];
-            $status = $_POST['status'];
             $max_peserta = $_POST['max'];
             $price = $_POST['price'];
             $deskripsi = $_POST['deskripsi'];
             $id = $_POST['id'];
 
             $model = new Event();
-            $insert = $model->editEvent($category, $title, $deskripsi, $date, $time_start, $time_end, $location, $max_peserta, $price, $status, $id);
+            $insert = $model->editEvent($category, $title, $deskripsi, $date, $time_start, $time_end, $location, $max_peserta, $price, $id);
 
             header("Location: index.php");
         }
@@ -106,20 +109,22 @@ class EventController{
 
     public function deleteEvent($id){
         $model = new Event();
+        $event = $model->getByEvent((int)$id);
+        if (!empty($event['google_calender_event_id'])) {
+            $client = GoogleClientApp::getClient();
+            $client->setAccessToken($_SESSION['google_token']);
 
-        if ($event['google_calender_event_id']) {
-        $client = GoogleClientApp::getClient();
-        $client->setAccessToken($_SESSION['google_token']);
+            if ($client->isAccessTokenExpired()) {
+                $client->fetchAccessTokenWithRefreshToken($client->getRefreshToken());
+            }
 
-        if ($client->isAccessTokenExpired()) {
-            $client->fetchAccessTokenWithRefreshToken($client->getRefreshToken());
+            $service = new Google_Service_Calendar($client);
+            $service->events->delete('primary', $event['google_event_id']);
         }
-
-        $service = new Google_Service_Calendar($client);
-        $service->events->delete('primary', $event['google_event_id']);
-    }
+        
         $delete = $model->deleteEvent($id);
         header("Location: index.php");
+        
     }
 
     public function daftarEvent(){
@@ -147,9 +152,9 @@ class EventController{
         }
 
         $event = new Event();
-        $participants = $event->getByEvent((int)$eventId);
+        $participants = $event->getPendaftar((int)$eventId);
 
-        // render PARTIAL VIEW
+        
         require "views/root/components/_list_pendaftar.php";
     }
 

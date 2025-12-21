@@ -1,4 +1,4 @@
-<div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 transition duration-300 hidden" id="detailModal">
+<div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 hidden" id="detailModal">
   <div class="bg-white/80 backdrop-blur-lg p-8 rounded-3xl shadow-2xl border-2 border-slate-200 modal-box bg-white p-6 rounded-lg shadow-lg transform transition duration-300 scale-75">
     <div class="flex items-center justify-between border-b pb-3 ">
       <h2 class="text-xl font-semibold text-gray-800">Detail Event</h2>
@@ -12,7 +12,7 @@
       <div class="space-y-2">
         <div class="flex justify-between items-start">
           <h3 id="modalTitle" class="text-lg font-medium text-gray-900"></h3>
-          <span class="px-3 py-1 rounded-md text-white text-sm bg-gradient-to-r from-emerald-600 to-teal-600">
+          <span id="upcoming" class="px-3 py-1 rounded-md text-white text-sm bg-gradient-to-r from-emerald-600 to-teal-600">
             upcoming
           </span>
         </div>

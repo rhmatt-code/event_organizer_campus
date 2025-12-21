@@ -42,8 +42,8 @@ class Auth{
     }
 
     public function saveGoogleToken($userId, $tokenJson) {
-        $stmt = $this->db->prepare("UPDATE users SET remember_token = ?, google_email = ? WHERE id = ?");
-        $stmt->execute([$tokenJson, $this->findById($userId)['google_email'] ?? null, $userId]);
+        $stmt = $this->db->prepare("UPDATE users SET remember_token = ? WHERE id = ?");
+        $stmt->execute([$tokenJson, $userId]);
         return $stmt;
     }
     

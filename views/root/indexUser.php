@@ -3,9 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Event Manager</title>
-    <link rel='icon' href="./../../../fp-event_organizer_campus/views/icon/CampusJayaLogo.png">
+    <meta name="description" content="Campusjaya adalah platform digital pengelolaan acara dan kegiatan mahasiswa">
+    <title>Campus jaya: Platform Manajemen event Mahasiswa</title>
+    <link rel='icon' href="./../../views/icon/CampusJayaLogo.png">
     <link rel="stylesheet" href="./views/src/output.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
     
     <style>
         [data-state=active] {
@@ -42,48 +44,39 @@
             <div class="flex items-center justify-between">
                 <div class="flex items-center gap-3">
                     <div class="bg-gradient-to-br from-amber-600 via-yellow-600 to-amber-700 p-3 rounded-xl shadow-lg">
-                        <span class="text-3xl"><img src="./../../../fp-event_organizer_campus/views/icon/CampusJayaLogo.png" width="50" height="50"></span>
+                        <span class="text-3xl"><img src="./../../views/icon/CampusJayaLogo.png" width="50" height="50"></span>
                     </div>
                     <div>
                         <h1 class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-700 via-yellow-700 to-amber-800">
-                            Event Manager
+                            Campusjaya
                         </h1>
-                        <p class="text-gray-600 text-sm">Platform Manajemen Event Premium</p>
+                        <p class="text-gray-600 text-sm">Platform Manajemen Event</p>
                     </div>
                 </div>
                 <div class="flex items-center gap-4">
                   <?php if(isset($_SESSION['name'])): ?>
-                 <div class="relative inline-block text-left">
-                    <!-- Trigger -->
-                    <button id="profileBtn"
+                  <el-dropdown class="relative ml-3">
+                                   <button id="profileBtn"
                         class="bg-gradient-to-r from-slate-100 to-stone-100 px-4 py-2 rounded-xl border border-slate-200 hover:shadow transition">
                         <div class="flex items-center gap-2">
-                            <span class="text-xl">👤</span>
+                            <span class="text-xl"><i class="fa-solid fa-user"></i></span>
                             <span class="text-gray-700 font-medium">
-                                <?php echo $_SESSION['name'] ?>
+                                <?php  $name = explode(" ",$_SESSION['name']);
+                                    echo $name[0];
+                                ?>
                             </span>
                             <span
                                 class="px-2 py-1 text-xs font-semibold rounded-md 
                                 bg-gradient-to-r from-emerald-600 to-teal-600 text-white">
                                 <?= ucfirst($_SESSION['role']) ?>
                             </span>
-                            <!-- Icon panah -->
-                            <svg class="w-4 h-4 text-gray-500 ml-1" fill="none" stroke="currentColor"
-                                stroke-width="2" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
-                            </svg>
                         </div>
                     </button>
 
-                    <!-- Dropdown -->
-                    <div id="profileMenu"
-                        class="hidden absolute right-0 mt-2 w-52 bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden z-50">
-                        <a href="index.php?page=logout"
-                            class="flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50">
-                            🔒 Logout
-                        </a>
-                    </div>
-                </div>
+                <el-menu anchor="bottom end" popover class="w-48 bg-gradient-to-r from-slate-100 to-stone-100 origin-top-right rounded-md py-1 shadow-lg outline outline-black/5 transition transition-discrete [--anchor-gap:--spacing(2)] data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in dark:shadow-none dark:-outline-offset-1 dark:outline-white/10">
+                    <a href="index.php?page=logout" class="block px-4 py-2 text-sm text-gray-700 focus:bg-gray-300 focus:rounded-lg focus:outline-hidden "><i class="fa-solid fa-lock"></i>  Log Out</a>
+                </el-menu>
+                </el-dropdown>
 
                   <?php else: ?>
                     <a href="index.php?page=login" class="inline-flex items-center gap-2 px-4 py-2 border border-red-200 text-red-600 rounded-lg hover:bg-red-50 hover:border-red-300 text-sm font-medium">
@@ -139,7 +132,7 @@
             <div class="flex flex-col md:flex-row gap-2 items-start justify-between">
                 <div class="flex-1 w-full">
                     <div class="relative">
-                        <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">🔍</span>
+                        <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"><i class="fa-solid fa-magnifying-glass"></i></span>
                         <input
                             type="text"
                             id="searchInput"
@@ -168,13 +161,13 @@
                     <div class="w-auto">
                         <div class="p-1 rounded-lg bg-slate-100">
                             <button data-state="active" class="filter-btn px-3 py-1.5 rounded-md text-sm font-medium" data-status="all">Semua</button>
-                            <button data-state="inactive" class="filter-btn px-3 py-1.5 rounded-md text-sm font-medium text-gray-600" data-status="published">Published</button>
-                            <button data-state="inactive" class="filter-btn px-3 py-1.5 rounded-md text-sm font-medium text-gray-600" data-status="cancelled">Cancelled</button>
+                            <button data-state="inactive" class="filter-btn px-3 py-1.5 rounded-md text-sm font-medium text-gray-600" data-status="upcoming">Upcoming</button>
+                            <button data-state="inactive" class="filter-btn px-3 py-1.5 rounded-md text-sm font-medium text-gray-600" data-status="ongoing">Ongoing</button>
                             <button data-state="inactive" class="filter-btn px-3 py-1.5 rounded-md text-sm font-medium text-gray-600" data-status="completed">Completed</button>
                         </div>
                     </div>
                      <button id="openTambah" type="button" class="text-white font-medium py-2.5 px-4 rounded-lg shadow-lg hover:shadow-xl transition-all bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700">
-                        <span class="mr-2">➕</span>
+                        <span class="mr-2"><i class="fa-solid fa-plus"></i>
                         Tambah Event
                     </button>
                     
@@ -231,21 +224,9 @@
 <?php endif; ?>
 
 <?php if(isset($_SESSION['name'])): ?>
-    <script>
-    const profileBtn = document.getElementById('profileBtn');
-    const profileMenu = document.getElementById('profileMenu');
 
-    profileBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        profileMenu.classList.toggle('hidden');
-    });
-
-    document.addEventListener('click', () => {
-        profileMenu.classList.add('hidden');
-    });
-</script>
 
 <?php endif; ?>
-
+<script src="https://cdn.jsdelivr.net/npm/@tailwindplus/elements@1" type="module"></script>
 </body>
 </html>
