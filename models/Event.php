@@ -1,5 +1,5 @@
 <?php 
-require_once "config/database.php";
+require_once __DIR__."/../config/database.php";
 require_once 'Auth.php';
 use Google\Client;
 use Google\Service\Calendar;
@@ -47,11 +47,6 @@ class Event{
         return $rows;
     
 
-    }
-
-     public function getRecommendation(){
-        $result = $this->getTopEvent();
-        return "Disarankan memperbanyak event jenis <b>{$result[0]['category_name']}</b> karena paling diminati mahasiswa.";
     }
 
     private function googleService()

@@ -1,7 +1,7 @@
 <?php
 
 use PHPMailer\PHPMailer\PHPMailer;
-require_once "models/Notification.php";
+require_once __DIR__."/../models/Notification.php";
 
 class NotificationController
 {
@@ -40,11 +40,11 @@ class NotificationController
 
                 $mail->send();
                 $email = new NotificationModel();
-                $this->email->markSent($row['id']);
+                $email->markSent($row['id']);
 
             } catch (Exception $e) {
                 $email = new NotificationModel();
-                $this->email->markFailed($row['id'], $e->getMessage());
+                $email->markFailed($row['id'], $e->getMessage());
             }
         }
     }

@@ -1,9 +1,9 @@
 <?php 
 
 
-require_once "models/Event.php";
-require_once "models/Notification.php";
-require_once "models/Auth.php";
+require_once __DIR__. "/../models/Event.php";
+require_once __DIR__."/../models/Notification.php";
+require_once __DIR__."/../models/Auth.php";
 
 
 

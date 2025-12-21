@@ -1,16 +1,11 @@
 <?php
 
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
-
 session_start();
 
-include "controllers/EventController.php";
-include "controllers/AuthController.php";
-include "controllers/GoogleController.php";
-require 'config/bootstrap.php';
+include __DIR__."/../controllers/EventController.php";
+include __DIR__."/../controllers/AuthController.php";
+include __DIR__."/../controllers/GoogleController.php";
+require __DIR__.'/../config/bootstrap.php';
 
 
 

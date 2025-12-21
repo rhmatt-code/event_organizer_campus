@@ -1,8 +1,8 @@
 <?php 
 
 
-require_once "models/Auth.php";
-require "config/GoogleClient.php";
+require_once __DIR__."/../models/Auth.php";
+require __DIR__."/../config/GoogleClient.php";
 
 class AuthController{
     

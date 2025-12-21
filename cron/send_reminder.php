@@ -1,8 +1,8 @@
 <?php
-    require 'vendor/autoload.php';
-    require 'config/database.php';
-    require 'models/Notification.php';
-    require 'controllers/NotificationsController.php';
+    require __DIR__.'/../vendor/autoload.php';
+    require __DIR__.'/../config/database.php';
+    require __DIR__.'/../models/Notification.php';
+    require __DIR__.'/../controllers/NotificationsController.php';
     
     $controller = new NotificationController();
     $controller->send();
