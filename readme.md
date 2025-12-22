@@ -23,90 +23,92 @@ Project Event Organizer Campus ini memiliki fitur:
 
 2. Cara Menjalankan di Lokal
 
-2.1 Clone / Extract Project
-
+Clone / Extract Project
 git clone https://github.com/rhmatt-code/event_organizer_campus.git
-
 Lakukan command ini didalam folder localhost jika laragon: laragon/www/
-
-2.2 Install Dependency
-
-install composer di root project:
+Setelah itu lakukan install composer di root project:
 composer install
 
-3. Konfigurasi Database
+---
 
+3. Konfigurasi Database
 Buat database dengan nama campus_jaya lalu lakukan import file sql yang ada didalam github dengan nama campus_jaya.sql.
 
+---
 
-4. Konfigurasi .env
+5. Konfigurasi .env
 
 Didalam env ini tersedia tentang kode penting didalam project ini
-GOOGLE_CLIENT_ID=(copy google client id yang ada didalam file credentials.json)
-GOOGLE_CLIENT_SECRET=(copy google client secret yang ada didalam file credentials.json)
-GOOGLE_REDIRECT_URI=(isi redirect url, link page callbacknya)
-GOOGLE_APP_NAME=(nama aplikasi)
+  * GOOGLE_CLIENT_ID=(copy google client id yang ada didalam file credentials.json)
+  * GOOGLE_CLIENT_SECRET=(copy google client secret yang ada didalam file credentials.json)
+  * GOOGLE_REDIRECT_URI=(isi redirect url, link page callbacknya)
+  * GOOGLE_APP_NAME=(nama aplikasi)
 
-SMTP_HOST=(isi smtp host)
-SMTP_USER=(isi gmail user untuk mengirim notification)
-SMTP_PASS=(password gmailnya)
+  * SMTP_HOST=(isi smtp host)
+  * SMTP_USER=(isi gmail user untuk mengirim notification)
+  * SMTP_PASS=(password gmailnya)
 
-DB_HOST=localhost
-DB_NAME=(nama database)
-DB_USER=(nama user)
-DB_PASS=(password database)
+  * DB_HOST=localhost
+  * DB_NAME=(nama database)
+  * DB_USER=(nama user)
+  * DB_PASS=(password database)
 
+---
 
 5. Konfigurasi Google OAuth
 
-1. Buat Project
-2. Enable:
-   * Google Calendar API
-   * Google People API
-3. OAuth Consent Screen → Publish
-4. Buat OAuth Client ID (Web)
+    1. Buat Project
+    2. Enable:
+       * Google Calendar API
+       * Google People API
+    3. OAuth Consent Screen → Publish
+    4. Buat OAuth Client ID (Web)
+    
+    Authorized Redirect URI:
+    http://localhost/fp-event_organizer_campus/index.php?page=google_callback
 
-Authorized Redirect URI:
-http://localhost/fp-event_organizer_campus/index.php?page=google_callback
+---
 
-6. Struktur Token Google
+7. Struktur Token Google
 
 * Access token & refresh token disimpan di **database**
 * Kolom:
 
   * `users.remember_token` (JSON token)
 
+---
 
 7. Login Google Flow
 
-1. User klik **Login with Google**
-2. Redirect ke Google OAuth
-3. Callback:
+    1. User klik **Login with Google**
+    2. Redirect ke Google OAuth
+    3. Callback:
+    
+       * Cek email di database
+       * Jika ada → login
+       * Jika tidak ada → insert user baru
+    4. Simpan token Google
+    5. Redirect ke dashboard
 
-   * Cek email di database
-   * Jika ada → login
-   * Jika tidak ada → insert user baru
-4. Simpan token Google
-5. Redirect ke dashboard
-
+---
 
 8. CRUD Event
 
-Create Event
-
-* Simpan ke database
-* Buat event di Google Calendar
-* Simpan `google_calendar_event_id`
-
-Update Event
-
-* Update database
-* Update event Google Calendar
-
-Delete Event
-
-* Hapus di Google Calendar
-* Hapus di database
+    Create Event
+    
+    * Simpan ke database
+    * Buat event di Google Calendar
+    * Simpan `google_calendar_event_id`
+    
+    Update Event
+    
+    * Update database
+    * Update event Google Calendar
+    
+    Delete Event
+    
+    * Hapus di Google Calendar
+    * Hapus di database
 
 ---
 
@@ -123,17 +125,17 @@ Status otomatis:
 
 Cronjob untuk melakukannya sistem otomatis mengirim email dan update status eventnya.
 
-10.1 Update Status Event
+  * Update Status Event
+  
+  ```bash
+  * * * * * php /home/username/public_html/cron/update_event.php
+  ```
 
-```bash
-* * * * * php /home/username/public_html/cron/update_event.php
-```
+  * Kirim Reminder Email
 
-10.2 Kirim Reminder Email
-
-```bash
-* * * * * php /home/username/public_html/cron/send_reminder.php
-```
+  ```bash
+  * * * * * php /home/username/public_html/cron/send_reminder.php
+  ```
 
 ---
 
@@ -147,10 +149,12 @@ Cronjob untuk melakukannya sistem otomatis mengirim email dan update status even
   * sent
   * failed
 
+---
 
 12. Akun Uji
 
 Login menggunakan akun Google masing-masing.
 User otomatis terdaftar saat login pertama.
+
 
 ---
